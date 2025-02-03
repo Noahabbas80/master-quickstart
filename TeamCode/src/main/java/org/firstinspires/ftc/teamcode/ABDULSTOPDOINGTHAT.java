@@ -29,15 +29,13 @@ public class ABDULSTOPDOINGTHAT extends LinearOpMode {
     private final double ticksInDegrees = 1425.1/180;
 
     private DcMotorEx arm;
-//    public Servo servo;
+    public Servo servo;
 
     @Override
     public void runOpMode() throws InterruptedException {
         controller = new PIDController(p,i,d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         arm = hardwareMap.get(DcMotorEx.class,"arm");
-//        servo = hardwareMap.servo.get("servo");
-//        servo.setPosition(0.5);
         waitForStart();
         while (opModeIsActive()) {
             controller.setPID(p,i,d);
