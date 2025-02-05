@@ -22,20 +22,22 @@ import javax.net.ssl.SSLEngineResult;
 public class ABDULSTOPDOINGTHAT extends LinearOpMode {
 
     private PIDController controller;
-    public static double p = 0.004, i = 0, d = 0.0004;
+    public static double p = 0.0032, i = 0, d = 0.0004;
     public static double f=0.069;
     public static double target = 0;
 
     private final double ticksInDegrees = 1425.1/180;
 
     private DcMotorEx arm;
-    public Servo servo;
+    public Servo armServo;
 
     @Override
     public void runOpMode() throws InterruptedException {
         controller = new PIDController(p,i,d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         arm = hardwareMap.get(DcMotorEx.class,"arm");
+        armServo = hardwareMap.servo.get("armServo");
+        armServo.setPosition(0.2);
         waitForStart();
         while (opModeIsActive()) {
             controller.setPID(p,i,d);
@@ -44,6 +46,7 @@ public class ABDULSTOPDOINGTHAT extends LinearOpMode {
             double ff = Math.cos(Math.toRadians(target/ticksInDegrees)) * f;
 
             double power = pid + ff;
+
 
 
             if(gamepad1.a){
