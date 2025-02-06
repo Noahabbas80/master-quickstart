@@ -41,7 +41,7 @@ public class expTeleop extends LinearOpMode {
     GrabState grabState = GrabState.CENTER;
 
     DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
-    Servo clawServo, wristServo, spinServo, armServo;
+    Servo clawServo, wristServo, spinServo, armServo, flagServo;
     Servo[] servoList;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
@@ -72,6 +72,7 @@ public class expTeleop extends LinearOpMode {
         wristServo = hardwareMap.servo.get("wristServo");
         spinServo = hardwareMap.servo.get("spinServo");
         armServo = hardwareMap.servo.get("armServo");
+        armServo = hardwareMap.servo.get("flagServo");
 
         elm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         erm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -226,7 +227,6 @@ public class expTeleop extends LinearOpMode {
 
                 break;
             case TAKESPECIMEN:
-//                WelcometotheSpaceJam = false;
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.38);
 //                armServo.setPosition(ArmWiggle - (.04 * (gamepad2.right_stick_x + 1)));
@@ -235,6 +235,7 @@ public class expTeleop extends LinearOpMode {
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
 //                armTarget = TakespecimenArmPos;
+
                 if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
                     clawOpen = !clawOpen;
                 }
@@ -251,7 +252,6 @@ public class expTeleop extends LinearOpMode {
                 else if(currentGamepad2.left_stick_button && currentGamepad2.right_stick_button){
                     robotState = RobotState.ASCENTSTART;
                 }
-
                 break;
             case HANGSPECIMEN:
                 clawServo.setPosition(clawOpen ? .65 : .98);
