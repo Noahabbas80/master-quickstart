@@ -172,7 +172,7 @@ public class mainTeleop extends LinearOpMode {
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.38 - .375 * gamepad2.left_stick_x); // write code to disable wrist while moving spinServo
                 armServo.setPosition(0.85 - ((SOA+.07) * (gamepad2.right_stick_x + 1)));
-                spinServo.setPosition(spinUp ? .9 : 0.235);
+                spinServo.setPosition(spinUp ? .99 : 0.235);
 
                 armTarget = 150;
                 erm.setTargetPosition(0);
