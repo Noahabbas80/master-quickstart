@@ -61,6 +61,7 @@ public class firstRoadrunner extends LinearOpMode {
         elm.setPower(.9);
         erm.setPower(.9);
         arm.setPower(0.2);
+        
         spinServo.setPosition(0.235);
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
@@ -100,6 +101,32 @@ public class firstRoadrunner extends LinearOpMode {
 
         }
 
+        class lowerArm implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                    if(timer == null){
+                        timer = new ElapsedTime();
+                    }
+                    armServo.setPosition(0.35);
+                    return timer.seconds() > .2;
+                }
+            }
+
+        class grabSample implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if(timer == null){
+                    timer = new ElapsedTime();
+                }
+                clawServo.setPosition(0.98);
+                return timer.seconds() > .2;
+            }
+        }
+
+
+
         class armBucketShift implements Action {
             ElapsedTime timer;
             @Override
@@ -137,16 +164,30 @@ public class firstRoadrunner extends LinearOpMode {
                 .waitSeconds(sto);
         waitForStart();
 
+        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-58 , -56.754, Math.toRadians(90)))
+                .splineTo(new Vector2d(-52, -52), Math.toRadians(315))
+                .waitSeconds(sto);
+        waitForStart();
+
 
 
 
         Action dropSampleMode = new dropSampleMode();
         Action armBucketShift = new armBucketShift();
         Action grabSampleMode = new grabSampleMode();
+        Action lowerArm = new lowerArm();
+        Action grabSample = new grabSampleMode();
         Actions.runBlocking(
                 new SequentialAction(
                         dropSampleMode,
                         goToBucket1.build(),
+                        armBucketShift,
+                        grabSampleMode,
+                        GrabSample2.build(),
+                        lowerArm,
+                        grabSample,
+                        dropSampleMode,
+                        goToBucket2.build(),
                         armBucketShift,
                         grabSampleMode
                         ));
