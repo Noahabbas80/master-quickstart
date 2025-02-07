@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="firstRoadrunner")
 public class firstRoadrunner extends LinearOpMode {
@@ -25,7 +26,7 @@ public class firstRoadrunner extends LinearOpMode {
         int armIdleTarget = 1870;
         int armRaisedTarget = 1040;
         int off = unmodifiedOffset/2;
-        double sto = 0.5;
+        double sto = 0.3;
         double bto = 1.25;
         double backwallforsample = 15.246;
         int  initArmTarget = 1870;
@@ -73,25 +74,81 @@ public class firstRoadrunner extends LinearOpMode {
                 wristServo.setPosition(0.49);
                 armServo.setPosition(.55);
 
-                elm.setTargetPosition(2150);
-                erm.setTargetPosition(2150);
+                elm.setTargetPosition(2300);
+                erm.setTargetPosition(2300);
                 arm.setTargetPosition(armRaisedTarget);
-                return (erm.getCurrentPosition() < 2140);
+                return (erm.getCurrentPosition() < 500);
             }
+
+
         }
 
-        TrajectoryActionBuilder startShift = drive.actionBuilder(new Pose2d(44, -64.5, -Math.PI/2))
-                .strafeTo(new Vector2d(44, -54.5))
-                .waitSeconds(sto);
+        class grabSampleMode implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                spinServo.setPosition(0.9);
+                clawServo.setPosition(0.65);
+                wristServo.setPosition(0.49);
+                armServo.setPosition(.55);
 
+                elm.setTargetPosition(0);
+                erm.setTargetPosition(0);
+                arm.setTargetPosition(armIdleTarget);
+                return (erm.getCurrentPosition() > 1000);
+            }
+
+
+        }
+
+        class armBucketShift implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if((erm.getCurrentPosition() < 2290)){
+                    return true;
+                }
+                else{
+                    if(timer == null){
+                        timer = new ElapsedTime();
+                    }
+                    armServo.setPosition(0.35);
+                    if (timer.seconds() < .5){
+                        return true;
+                    }
+                    else{
+                        clawServo.setPosition(0.65);
+                        return false;
+                    }
+                }
+            }
+
+
+        }
+
+        TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-32.5175, -54.5))
+                .waitSeconds(sto)
+                .splineTo(new Vector2d(-52, -52), Math.toRadians(315))
+                .waitSeconds(sto);
         waitForStart();
 
+        TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-52 , -52, Math.toRadians(315)))
+                .splineTo(new Vector2d(-58, -56.754), Math.toRadians(90))
+                .waitSeconds(sto);
+        waitForStart();
+
+
+
+
         Action dropSampleMode = new dropSampleMode();
+        Action armBucketShift = new armBucketShift();
+        Action grabSampleMode = new grabSampleMode();
         Actions.runBlocking(
                 new SequentialAction(
-                        startShift,
                         dropSampleMode,
-                        startShift,
+                        goToBucket1.build(),
+                        armBucketShift,
+                        grabSampleMode
                         ));
     }
 
