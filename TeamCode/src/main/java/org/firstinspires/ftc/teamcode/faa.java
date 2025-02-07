@@ -182,7 +182,7 @@ public class faa extends LinearOpMode {
             case DROPSAMPLE:
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.8 - (.1 * (gamepad2.right_stick_x + 1)));
+                armServo.setPosition(0.8 - (.1 * (-gamepad2.right_stick_x + 1)));
                 spinServo.setPosition(spinUp ? 0.3 : .975);
 
                 elm.setTargetPosition(2150);

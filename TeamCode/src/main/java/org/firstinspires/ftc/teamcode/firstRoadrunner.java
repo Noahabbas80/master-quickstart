@@ -280,9 +280,9 @@ public class firstRoadrunner extends LinearOpMode {
                 .waitSeconds(sto);
 
         TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62.75, -47, Math.toRadians(260)))
-                .strafeTo(new Vector2d(-50, -55))
-                .setTangent(Math.toRadians(260))
-                .splineTo(new Vector2d(-57, -57), Math.toRadians(180))
+                .strafeTo(new Vector2d(-50, -50))
+                .setTangent(Math.toRadians(180))
+                .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
                 .waitSeconds(sto);
 
         TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(225)))
