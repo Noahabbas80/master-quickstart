@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -24,6 +25,8 @@ public class firstRoadrunner extends LinearOpMode {
         int armIdleTarget = 1870;
         int armRaisedTarget = 1040;
         int off = unmodifiedOffset/2;
+        double sto = 0.5;
+        double bto = 1.25;
         double backwallforsample = 15.246;
         int  initArmTarget = 1870;
         double backwallforsampleactual = 56.754;
@@ -76,14 +79,20 @@ public class firstRoadrunner extends LinearOpMode {
                 return (erm.getCurrentPosition() < 2140);
             }
         }
+
+        TrajectoryActionBuilder startShift = drive.actionBuilder(new Pose2d(44, -64.5, -Math.PI/2))
+                .strafeTo(new Vector2d(44, -54.5))
+                .waitSeconds(sto);
+
         waitForStart();
 
         Action dropSampleMode = new dropSampleMode();
         Actions.runBlocking(
                 new SequentialAction(
+                        startShift,
                         dropSampleMode,
-
-                        );
+                        startShift,
+                        ));
     }
 
 
