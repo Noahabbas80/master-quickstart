@@ -6,20 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "mainTeleop")
+@TeleOp(name = "faa")
 
 
-public class mainTeleop extends LinearOpMode {
+public class faa extends LinearOpMode {
     public double SOA = 0;
     public enum RobotState {
         GRABSAMPLE,
@@ -91,8 +82,8 @@ public class mainTeleop extends LinearOpMode {
 
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
-        spinServo.setPosition(.9);
-        armServo.setPosition(1);
+        spinServo.setPosition(.975);
+        armServo.setPosition(.1);
 
         armTarget = 150;
         waitForStart();
@@ -106,8 +97,11 @@ public class mainTeleop extends LinearOpMode {
 
             if(!screwOverGabe){
                 p1Controls();
-                arm.setPower(setArmPower());
+//                arm.setPower(setArmPower());
                 arm.setTargetPosition(armTarget);
+            }
+            else{
+                arm.setPower(0);
             }
             p2Controls(currentGamepad2, previousGamepad2);
             telem();
@@ -171,8 +165,8 @@ public class mainTeleop extends LinearOpMode {
                 }
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49 - .375 * gamepad2.left_stick_x); // write code to disable wrist while moving spinServo
-                armServo.setPosition(0.85 - ((SOA+.07) * (gamepad2.right_stick_x + 1)));
-                spinServo.setPosition(spinUp ? .99 : 0.235);
+                armServo.setPosition(0.62 - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
+                spinServo.setPosition(spinUp ? .99 : 0.3);
 
                 armTarget = 150;
                 erm.setTargetPosition(0);
@@ -188,8 +182,8 @@ public class mainTeleop extends LinearOpMode {
             case DROPSAMPLE:
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.7 - (.1 * (gamepad2.right_stick_x + 1)));
-                spinServo.setPosition(spinUp ? 0.235 : .9);
+                armServo.setPosition(0.8 - (.1 * (gamepad2.right_stick_x + 1)));
+                spinServo.setPosition(spinUp ? 0.3 : .975);
 
                 elm.setTargetPosition(2150);
                 erm.setTargetPosition(2150);
@@ -211,12 +205,12 @@ public class mainTeleop extends LinearOpMode {
             case ASCENTSTART:
                 clawServo.setPosition(.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(.55);
-                spinServo.setPosition(.9);
+                armServo.setPosition(.8);
+                spinServo.setPosition(.975);
 
-                elm.setTargetPosition(2500);
-                erm.setTargetPosition(2500);
-                armTarget = 1170;
+                elm.setTargetPosition(2750);
+                erm.setTargetPosition(2750);
+                armTarget = 1300;
                 if(currentGamepad2.right_bumper) {
                     robotState = RobotState.ASCENTEND;
                 } else if (currentGamepad2.x && currentGamepad2.y && currentGamepad2.a && currentGamepad2.b) {
@@ -226,8 +220,8 @@ public class mainTeleop extends LinearOpMode {
             case ASCENTEND:
                 clawServo.setPosition(.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(.55);
-                spinServo.setPosition(.9); //possibly comment servo positions out (since they're the same as last time)
+                armServo.setPosition(0.7);
+                spinServo.setPosition(.975); //possibly comment servo positions out (since they're the same as last time)
 
                 elm.setTargetPosition(1200);
                 erm.setTargetPosition(1200);

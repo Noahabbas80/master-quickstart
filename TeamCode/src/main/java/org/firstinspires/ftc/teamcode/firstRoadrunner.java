@@ -23,16 +23,17 @@ public class firstRoadrunner extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         int botwidth = 14;
         int unmodifiedOffset = 18 - botwidth;
-        int armIdleTarget = 1870;
+        int armIdleTarget = 150;
         int armRaisedTarget = 1040;
         int off = unmodifiedOffset/2;
-        double sto = 0.3;
+        double sto = .12;
         double bto = 1.25;
+
         double backwallforsample = 15.246;
-        int  initArmTarget = 1870;
+        int initArmTarget = 220;
         double backwallforsampleactual = 56.754;
         DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
-        Servo clawServo, wristServo, spinServo, armServo, flagServo;
+        Servo clawServo, wristServo, spinServo, armServo;
 
         MecanumDrive drive = new MecanumDrive(hardwareMap,new Pose2d(-32.5175 , -65.071, Math.toRadians(180)));
 
@@ -44,7 +45,6 @@ public class firstRoadrunner extends LinearOpMode {
         wristServo = hardwareMap.servo.get("wristServo");
         spinServo = hardwareMap.servo.get("spinServo");
         armServo = hardwareMap.servo.get("armServo");
-        flagServo = hardwareMap.servo.get("flagServo");
 
         elm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         erm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -52,7 +52,7 @@ public class firstRoadrunner extends LinearOpMode {
 
         elm.setTargetPosition(0);
         erm.setTargetPosition(0);
-        arm.setTargetPosition(initArmTarget);
+        arm.setTargetPosition(150);
 
         elm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         erm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -61,24 +61,26 @@ public class firstRoadrunner extends LinearOpMode {
         elm.setPower(.9);
         erm.setPower(.9);
         arm.setPower(0.2);
-        
-        spinServo.setPosition(0.235);
+
         clawServo.setPosition(0.98);
-        wristServo.setPosition(0.49);
-        armServo.setPosition(.55);
+        wristServo.setPosition(0.53);
+        spinServo.setPosition(.975);
+        armServo.setPosition(.1);
+
+        elm.setDirection(DcMotor.Direction.REVERSE);
 
         class dropSampleMode implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(0.235);
+                spinServo.setPosition(0.975);
                 clawServo.setPosition(0.98);
-                wristServo.setPosition(0.49);
-                armServo.setPosition(.55);
+                wristServo.setPosition(0.53);
+                armServo.setPosition(.7);
 
                 elm.setTargetPosition(2300);
                 erm.setTargetPosition(2300);
                 arm.setTargetPosition(armRaisedTarget);
-                return (erm.getCurrentPosition() < 500);
+                return (erm.getCurrentPosition() < 1000);
             }
 
 
@@ -87,19 +89,36 @@ public class firstRoadrunner extends LinearOpMode {
         class grabSampleMode implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(0.9);
+                spinServo.setPosition(0.3);
                 clawServo.setPosition(0.65);
-                wristServo.setPosition(0.49);
-                armServo.setPosition(.55);
+                wristServo.setPosition(0.53);
+                armServo.setPosition(0.1);
 
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
-                arm.setTargetPosition(armIdleTarget);
+                arm.setTargetPosition(150);
                 return (erm.getCurrentPosition() > 1000);
             }
 
+        }
+
+        class grabSampleMode2 implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                spinServo.setPosition(0.975);
+                clawServo.setPosition(0.65);
+                wristServo.setPosition(0.53);
+                armServo.setPosition(0.1);
+
+                elm.setTargetPosition(0);
+                erm.setTargetPosition(0);
+                arm.setTargetPosition(150);
+                return (erm.getCurrentPosition() > 1000);
+            }
 
         }
+
+
 
         class lowerArm implements Action {
             ElapsedTime timer;
@@ -108,22 +127,46 @@ public class firstRoadrunner extends LinearOpMode {
                     if(timer == null){
                         timer = new ElapsedTime();
                     }
-                    armServo.setPosition(0.35);
-                    return timer.seconds() > .2;
+                    armServo.setPosition(0.64);
+                    return timer.seconds() < 1.2;
                 }
             }
 
-        class grabSample implements Action {
+        class lowerArm2 implements Action {
             ElapsedTime timer;
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 if(timer == null){
                     timer = new ElapsedTime();
                 }
-                clawServo.setPosition(0.98);
-                return timer.seconds() > .2;
+                armServo.setPosition(0.64);
+                return timer.seconds() < 1.2;
             }
         }
+
+        class pickSample implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if(timer == null){
+                    timer = new ElapsedTime();
+                }
+                clawServo.setPosition(0.99);
+                return timer.seconds() < 1.2;
+            }
+        }
+        class pickSample2 implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if(timer == null){
+                    timer = new ElapsedTime();
+                }
+                clawServo.setPosition(0.99);
+                return timer.seconds() < 1.2;
+            }
+        }
+
 
 
 
@@ -138,13 +181,70 @@ public class firstRoadrunner extends LinearOpMode {
                     if(timer == null){
                         timer = new ElapsedTime();
                     }
-                    armServo.setPosition(0.35);
-                    if (timer.seconds() < .5){
+                    armServo.setPosition(0.7);
+                    if (timer.seconds() < .9){
+                        armServo.setPosition(.59);
                         return true;
                     }
                     else{
-                        clawServo.setPosition(0.65);
-                        return false;
+                        if(timer.seconds() < 1.4){
+                            clawServo.setPosition(0.65);
+                        }
+                        return timer.seconds() < 3;
+                    }
+                }
+            }
+
+
+        }
+        class armBucketShift2 implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if((erm.getCurrentPosition() < 2290)){
+                    return true;
+                }
+                else{
+                    if(timer == null){
+                        timer = new ElapsedTime();
+                    }
+                    armServo.setPosition(0.7);
+                    if (timer.seconds() < .9){
+                        armServo.setPosition(.59);
+                        return true;
+                    }
+                    else{
+                        if(timer.seconds() < 1.4){
+                            clawServo.setPosition(0.65);
+                        }
+                        return timer.seconds() < 2;
+                    }
+                }
+            }
+
+
+        }
+        class armBucketShift3 implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if((erm.getCurrentPosition() < 2290)){
+                    return true;
+                }
+                else{
+                    if(timer == null){
+                        timer = new ElapsedTime();
+                    }
+                    armServo.setPosition(0.7);
+                    if (timer.seconds() < .9){
+                        armServo.setPosition(.59);
+                        return true;
+                    }
+                    else{
+                        if(timer.seconds() < 1.4){
+                            clawServo.setPosition(0.65);
+                        }
+                        return timer.seconds() < 2;
                     }
                 }
             }
@@ -152,21 +252,44 @@ public class firstRoadrunner extends LinearOpMode {
 
         }
 
+//
+//        TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
+//                .setTangent(Math.toRadians(90))
+//                .splineTo(new Vector2d(-57, -57), Math.toRadians(135))
+//                .waitSeconds(sto);
+
         TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
                 .strafeTo(new Vector2d(-32.5175, -54.5))
                 .waitSeconds(sto)
-                .splineTo(new Vector2d(-52, -52), Math.toRadians(315))
+                .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
                 .waitSeconds(sto);
-        waitForStart();
 
-        TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-52 , -52, Math.toRadians(315)))
-                .splineTo(new Vector2d(-58, -56.754), Math.toRadians(90))
+        TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(225)))
+                .setTangent(Math.toRadians(260))
+                .splineToLinearHeading(new Pose2d(-52.75, -47, Math.toRadians(260)), Math.toRadians(260))
                 .waitSeconds(sto);
-        waitForStart();
 
-        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-58 , -56.754, Math.toRadians(90)))
-                .splineTo(new Vector2d(-52, -52), Math.toRadians(315))
+        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-52.75, -47, Math.toRadians(260)))
+                .setTangent(Math.toRadians(260))
+                .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
                 .waitSeconds(sto);
+
+        TrajectoryActionBuilder GrabSample3 = drive.actionBuilder(new Pose2d(-57 , -57, Math.toRadians(225)))
+                .setTangent(Math.toRadians(260))
+                .splineToLinearHeading(new Pose2d(-62.75, -47, Math.toRadians(260)), Math.toRadians(260))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62.75, -47, Math.toRadians(260)))
+                .strafeTo(new Vector2d(-55, -50))
+                .setTangent(Math.toRadians(260))
+                .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(225)))
+                .setTangent(Math.toRadians(180))
+                .strafeTo(new Vector2d(-40, -15))
+                .waitSeconds(sto);
+
         waitForStart();
 
 
@@ -174,9 +297,14 @@ public class firstRoadrunner extends LinearOpMode {
 
         Action dropSampleMode = new dropSampleMode();
         Action armBucketShift = new armBucketShift();
+        Action armBucketShift2 = new armBucketShift2();
         Action grabSampleMode = new grabSampleMode();
         Action lowerArm = new lowerArm();
-        Action grabSample = new grabSampleMode();
+        Action pickSample = new pickSample();
+        Action armBucketShift3 = new armBucketShift3();
+        Action pickSample2 = new pickSample2();
+        Action lowerArm2 = new lowerArm2();
+        Action grabSampleMode2 = new grabSampleMode2();
         Actions.runBlocking(
                 new SequentialAction(
                         dropSampleMode,
@@ -185,11 +313,19 @@ public class firstRoadrunner extends LinearOpMode {
                         grabSampleMode,
                         GrabSample2.build(),
                         lowerArm,
-                        grabSample,
+                        pickSample,
                         dropSampleMode,
                         goToBucket2.build(),
-                        armBucketShift,
-                        grabSampleMode
+                        armBucketShift2,
+                        grabSampleMode,
+                        GrabSample3.build(),
+                        lowerArm2,
+                        pickSample2,
+                        dropSampleMode,
+                        goToBucket3.build(),
+                        armBucketShift3,
+                        grabSampleMode2,
+                        end.build()
                         ));
     }
 

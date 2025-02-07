@@ -37,7 +37,9 @@ public class ABDULSTOPDOINGTHAT extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         arm = hardwareMap.get(DcMotorEx.class,"arm");
         armServo = hardwareMap.servo.get("armServo");
-        armServo.setPosition(0.2);
+        armServo.setPosition(0.67 - (.1 * (gamepad2.right_stick_x + 1)));
+
+        arm.setDirection(DcMotor.Direction.REVERSE);
         waitForStart();
         while (opModeIsActive()) {
             controller.setPID(p,i,d);
@@ -50,7 +52,7 @@ public class ABDULSTOPDOINGTHAT extends LinearOpMode {
 
 
             if(gamepad1.a){
-                target = 150;
+                target = 1500;
             }
             else{
                 target = 1040;
