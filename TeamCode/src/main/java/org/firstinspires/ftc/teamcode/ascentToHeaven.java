@@ -127,7 +127,7 @@ public class ascentToHeaven extends LinearOpMode {
                         timer = new ElapsedTime();
                     }
                     armServo.setPosition(0.64);
-                    return timer.seconds() < .1;
+                    return timer.seconds() < .2;
                 }
             }
 
@@ -139,7 +139,7 @@ public class ascentToHeaven extends LinearOpMode {
                     timer = new ElapsedTime();
                 }
                 armServo.setPosition(0.64);
-                return timer.seconds() < .1;
+                return timer.seconds() < .2;
             }
         }
 
@@ -151,7 +151,7 @@ public class ascentToHeaven extends LinearOpMode {
                     timer = new ElapsedTime();
                 }
                 clawServo.setPosition(0.99);
-                return timer.seconds() < 1.2;
+                return timer.seconds() < .4;
             }
         }
         class pickSample2 implements Action {
@@ -162,7 +162,7 @@ public class ascentToHeaven extends LinearOpMode {
                     timer = new ElapsedTime();
                 }
                 clawServo.setPosition(0.99);
-                return timer.seconds() < 1.2;
+                return timer.seconds() < .4;
             }
         }
 
@@ -181,15 +181,15 @@ public class ascentToHeaven extends LinearOpMode {
                         timer = new ElapsedTime();
                     }
                     armServo.setPosition(0.7);
-                    if (timer.seconds() < .9){
+                    if (timer.seconds() < .1){
                         armServo.setPosition(.59);
                         return true;
                     }
                     else{
-                        if(timer.seconds() < 1.4){
+                        if(timer.seconds() < .6){
                             clawServo.setPosition(0.65);
                         }
-                        return timer.seconds() < 3;
+                        return timer.seconds() < .95;
                     }
                 }
             }
