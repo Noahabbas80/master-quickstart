@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="ascentToHeaven")
-public class ascentToHeaven extends LinearOpMode {
+@Autonomous(name="secondRoadrunner")
+public class secondRoadrunner extends LinearOpMode {
     @Override
     
     public void runOpMode() throws InterruptedException {
@@ -25,7 +25,7 @@ public class ascentToHeaven extends LinearOpMode {
         int armIdleTarget = 150;
         int armRaisedTarget = 1040;
         int off = unmodifiedOffset/2;
-        double sto = .05;
+        double sto = .12;
         double bto = 1.25;
 
         double backwallforsample = 15.246;
@@ -59,7 +59,7 @@ public class ascentToHeaven extends LinearOpMode {
 
         elm.setPower(.9);
         erm.setPower(.9);
-        arm.setPower(0.325);
+        arm.setPower(0.2);
 
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.53);
@@ -79,7 +79,7 @@ public class ascentToHeaven extends LinearOpMode {
                 elm.setTargetPosition(2300);
                 erm.setTargetPosition(2300);
                 arm.setTargetPosition(armRaisedTarget);
-                return (erm.getCurrentPosition() < 750);
+                return (erm.getCurrentPosition() < 1000);
             }
 
 
@@ -96,7 +96,7 @@ public class ascentToHeaven extends LinearOpMode {
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
                 arm.setTargetPosition(150);
-                return (erm.getCurrentPosition() > 750);
+                return (erm.getCurrentPosition() > 1000);
             }
 
         }
@@ -104,7 +104,7 @@ public class ascentToHeaven extends LinearOpMode {
         class grabSampleMode2 implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(0.975);
+                spinServo.setPosition(0.3);
                 clawServo.setPosition(0.65);
                 wristServo.setPosition(0.53);
                 armServo.setPosition(0.1);
@@ -112,7 +112,7 @@ public class ascentToHeaven extends LinearOpMode {
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
                 arm.setTargetPosition(150);
-                return (erm.getCurrentPosition() > 750);
+                return (erm.getCurrentPosition() > 1000);
             }
 
         }
@@ -127,7 +127,7 @@ public class ascentToHeaven extends LinearOpMode {
                         timer = new ElapsedTime();
                     }
                     armServo.setPosition(0.64);
-                    return timer.seconds() < .2;
+                    return timer.seconds() < 1.2;
                 }
             }
 
@@ -139,7 +139,20 @@ public class ascentToHeaven extends LinearOpMode {
                     timer = new ElapsedTime();
                 }
                 armServo.setPosition(0.64);
-                return timer.seconds() < .2;
+                return timer.seconds() < 1.2;
+            }
+        }
+
+        class lowerArm3 implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if(timer == null){
+                    timer = new ElapsedTime();
+                }
+                wristServo.setPosition(0.675);
+                armServo.setPosition(0.64);
+                return timer.seconds() < 1.2;
             }
         }
 
@@ -151,7 +164,7 @@ public class ascentToHeaven extends LinearOpMode {
                     timer = new ElapsedTime();
                 }
                 clawServo.setPosition(0.99);
-                return timer.seconds() < .4;
+                return timer.seconds() < 1.2;
             }
         }
         class pickSample2 implements Action {
@@ -162,10 +175,20 @@ public class ascentToHeaven extends LinearOpMode {
                     timer = new ElapsedTime();
                 }
                 clawServo.setPosition(0.99);
-                return timer.seconds() < .4;
+                return timer.seconds() < 1.2;
             }
         }
-
+        class pickSample3 implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if(timer == null){
+                    timer = new ElapsedTime();
+                }
+                clawServo.setPosition(0.99);
+                return timer.seconds() < 1.2;
+            }
+        }
 
 
 
@@ -181,21 +204,23 @@ public class ascentToHeaven extends LinearOpMode {
                         timer = new ElapsedTime();
                     }
                     armServo.setPosition(0.7);
-                    if (timer.seconds() < .1){
+                    if (timer.seconds() < .9){
                         armServo.setPosition(.59);
                         return true;
                     }
                     else{
-                        if(timer.seconds() < .6){
+                        if(timer.seconds() < 1.4){
                             clawServo.setPosition(0.65);
                         }
-                        return timer.seconds() < .95;
+                        return timer.seconds() < 3;
                     }
                 }
             }
 
 
         }
+
+
         class armBucketShift2 implements Action {
             ElapsedTime timer;
             @Override
@@ -208,15 +233,15 @@ public class ascentToHeaven extends LinearOpMode {
                         timer = new ElapsedTime();
                     }
                     armServo.setPosition(0.7);
-                    if (timer.seconds() < .1){
+                    if (timer.seconds() < .9){
                         armServo.setPosition(.59);
                         return true;
                     }
                     else{
-                        if(timer.seconds() < .6){
+                        if(timer.seconds() < 1.4){
                             clawServo.setPosition(0.65);
                         }
-                        return timer.seconds() < .95;
+                        return timer.seconds() < 2;
                     }
                 }
             }
@@ -235,22 +260,48 @@ public class ascentToHeaven extends LinearOpMode {
                         timer = new ElapsedTime();
                     }
                     armServo.setPosition(0.7);
-                    if (timer.seconds() < .1){
+                    if (timer.seconds() < .9){
                         armServo.setPosition(.59);
                         return true;
                     }
                     else{
-                        if(timer.seconds() < .6){
+                        if(timer.seconds() < 1.4){
                             clawServo.setPosition(0.65);
                         }
-                        return timer.seconds() < .95;
+                        return timer.seconds() < 2;
                     }
                 }
             }
 
 
         }
+        class armBucketShift4 implements Action {
+            ElapsedTime timer;
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                if((erm.getCurrentPosition() < 2290)){
+                    return true;
+                }
+                else{
+                    if(timer == null){
+                        timer = new ElapsedTime();
+                    }
+                    armServo.setPosition(0.7);
+                    if (timer.seconds() < .9){
+                        armServo.setPosition(.59);
+                        return true;
+                    }
+                    else{
+                        if(timer.seconds() < 1.4){
+                            clawServo.setPosition(0.65);
+                        }
+                        return timer.seconds() < 3;
+                    }
+                }
+            }
 
+
+        }
 //
 //        TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
 //                .setTangent(Math.toRadians(90))
@@ -258,7 +309,7 @@ public class ascentToHeaven extends LinearOpMode {
 //                .waitSeconds(sto);
 
         TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
-                .strafeTo(new Vector2d(-32.5175, -63))
+                .strafeTo(new Vector2d(-32.5175, -54.5))
                 .waitSeconds(sto)
                 .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
                 .waitSeconds(sto);
@@ -279,17 +330,24 @@ public class ascentToHeaven extends LinearOpMode {
                 .waitSeconds(sto);
 
         TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62.75, -47, Math.toRadians(260)))
-//                .strafeTo(new Vector2d(-50, -50))
-//                .setTangent(Math.toRadians(180))
-//                .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
-                //worst case scenario do tan 260 (revert to bucket)
+                .setTangent(Math.toRadians(0))
+                .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder GrabSample4 = drive.actionBuilder(new Pose2d(-57 , -57, Math.toRadians(225)))
+                .setTangent(Math.toRadians(260))
+                .splineToLinearHeading(new Pose2d(-57.4, -38.85, Math.toRadians(135)), Math.toRadians(135))
+                .waitSeconds(sto);
+
+
+        TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-57.4, -38.85, Math.toRadians(135)))
                 .setTangent(Math.toRadians(260))
                 .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
                 .waitSeconds(sto);
 
         TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(225)))
                 .setTangent(Math.toRadians(180))
-                .strafeTo(new Vector2d(-40, -15))
+                .strafeTo(new Vector2d(-46, -46))
                 .waitSeconds(sto);
 
         waitForStart();
@@ -307,6 +365,9 @@ public class ascentToHeaven extends LinearOpMode {
         Action pickSample2 = new pickSample2();
         Action lowerArm2 = new lowerArm2();
         Action grabSampleMode2 = new grabSampleMode2();
+        Action lowerArm3 = new lowerArm3();
+        Action pickSample3 = new pickSample3();
+        Action armBucketShift4 = new armBucketShift4();
         Actions.runBlocking(
                 new SequentialAction(
                         dropSampleMode,
@@ -326,7 +387,14 @@ public class ascentToHeaven extends LinearOpMode {
                         dropSampleMode,
                         goToBucket3.build(),
                         armBucketShift3,
-                        grabSampleMode2,
+                        grabSampleMode,
+                        GrabSample4.build(),
+                        lowerArm3,
+                        pickSample3,
+                        dropSampleMode,
+                        goToBucket4.build(),
+                        armBucketShift4,
+                        grabSampleMode,
                         end.build()
                         ));
     }
