@@ -63,7 +63,7 @@ public class firstRoadrunner extends LinearOpMode {
         arm.setPower(0.2);
 
         clawServo.setPosition(0.98);
-        wristServo.setPosition(0.53);
+        wristServo.setPosition(0.49);
         spinServo.setPosition(.975);
         armServo.setPosition(.1);
 
@@ -74,7 +74,7 @@ public class firstRoadrunner extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                 spinServo.setPosition(0.975);
                 clawServo.setPosition(0.98);
-                wristServo.setPosition(0.53);
+                wristServo.setPosition(0.49);
                 armServo.setPosition(.7);
 
                 elm.setTargetPosition(2300);
@@ -91,7 +91,7 @@ public class firstRoadrunner extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                 spinServo.setPosition(0.3);
                 clawServo.setPosition(0.65);
-                wristServo.setPosition(0.53);
+                wristServo.setPosition(0.49);
                 armServo.setPosition(0.1);
 
                 elm.setTargetPosition(0);
@@ -107,7 +107,7 @@ public class firstRoadrunner extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                 spinServo.setPosition(0.975);
                 clawServo.setPosition(0.65);
-                wristServo.setPosition(0.53);
+                wristServo.setPosition(0.49);
                 armServo.setPosition(0.1);
 
                 elm.setTargetPosition(0);
@@ -127,7 +127,7 @@ public class firstRoadrunner extends LinearOpMode {
                     if(timer == null){
                         timer = new ElapsedTime();
                     }
-                    armServo.setPosition(0.64);
+                    armServo.setPosition(0.573);
                     return timer.seconds() < 1.2;
                 }
             }
@@ -139,7 +139,7 @@ public class firstRoadrunner extends LinearOpMode {
                 if(timer == null){
                     timer = new ElapsedTime();
                 }
-                armServo.setPosition(0.64);
+                armServo.setPosition(0.572);
                 return timer.seconds() < 1.2;
             }
         }
@@ -187,7 +187,7 @@ public class firstRoadrunner extends LinearOpMode {
                         return true;
                     }
                     else{
-                        if(timer.seconds() < 1.4){
+                        if(timer.seconds() < 1.75){
                             clawServo.setPosition(0.65);
                         }
                         return timer.seconds() < 3;
@@ -214,10 +214,10 @@ public class firstRoadrunner extends LinearOpMode {
                         return true;
                     }
                     else{
-                        if(timer.seconds() < 1.4){
+                        if(timer.seconds() < 1.75){
                             clawServo.setPosition(0.65);
                         }
-                        return timer.seconds() < 2;
+                        return timer.seconds() < 3;
                     }
                 }
             }
@@ -241,10 +241,10 @@ public class firstRoadrunner extends LinearOpMode {
                         return true;
                     }
                     else{
-                        if(timer.seconds() < 1.4){
+                        if(timer.seconds() < 1.75){
                             clawServo.setPosition(0.65);
                         }
-                        return timer.seconds() < 2;
+                        return timer.seconds() < 3;
                     }
                 }
             }
@@ -266,28 +266,29 @@ public class firstRoadrunner extends LinearOpMode {
 
         TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(225)))
                 .setTangent(Math.toRadians(260))
-                .splineToLinearHeading(new Pose2d(-52.75, -47, Math.toRadians(260)), Math.toRadians(260))
+                .splineToLinearHeading(new Pose2d(-53.5, -46.25, Math.toRadians(260)), Math.toRadians(260))
                 .waitSeconds(sto);
 
-        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-52.75, -47, Math.toRadians(260)))
+        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-53.5, -46.25, Math.toRadians(260)))
                 .setTangent(Math.toRadians(260))
-                .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
+                .splineTo(new Vector2d(-56.5, -56.5), Math.toRadians(225))
                 .waitSeconds(sto);
 
-        TrajectoryActionBuilder GrabSample3 = drive.actionBuilder(new Pose2d(-57 , -57, Math.toRadians(225)))
+        TrajectoryActionBuilder GrabSample3 = drive.actionBuilder(new Pose2d(-56.5 , -56.5, Math.toRadians(225)))
                 .setTangent(Math.toRadians(260))
-                .splineToLinearHeading(new Pose2d(-62.75, -47, Math.toRadians(260)), Math.toRadians(260))
+                .splineToLinearHeading(new Pose2d(-63.5, -46.25, Math.toRadians(260)), Math.toRadians(260))
                 .waitSeconds(sto);
 
-        TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62.75, -47, Math.toRadians(260)))
+        TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-63.5, -46.25, Math.toRadians(260)))
                 .strafeTo(new Vector2d(-50, -50))
                 .setTangent(Math.toRadians(180))
-                .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
+                .splineTo(new Vector2d(-57, -57), Math.toRadians(155))
                 .waitSeconds(sto);
+        
 
-        TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(225)))
+        TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(155)))
                 .setTangent(Math.toRadians(180))
-                .strafeTo(new Vector2d(-40, -15))
+                .strafeTo(new Vector2d(-45, -25))
                 .waitSeconds(sto);
 
         waitForStart();

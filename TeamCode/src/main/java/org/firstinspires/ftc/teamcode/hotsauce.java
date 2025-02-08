@@ -225,7 +225,7 @@ public class hotsauce extends LinearOpMode {
 
                 elm.setTargetPosition(1200);
                 erm.setTargetPosition(1200);
-//                arm.setPower(0);
+                arm.setPower(0);
                 screwOverGabe = true; //yippee
                 flMotor.setPower(0);
                 frMotor.setPower(0);
