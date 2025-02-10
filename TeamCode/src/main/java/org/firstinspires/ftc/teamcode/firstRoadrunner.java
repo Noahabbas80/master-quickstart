@@ -97,7 +97,7 @@ public class firstRoadrunner extends LinearOpMode {
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
                 arm.setTargetPosition(150);
-                return (erm.getCurrentPosition() > 1000);
+                return (erm.getCurrentPosition() > 2200);
             }
 
         }
@@ -261,34 +261,45 @@ public class firstRoadrunner extends LinearOpMode {
         TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
                 .strafeTo(new Vector2d(-32.5175, -54.5))
                 .waitSeconds(sto)
+                .splineTo(new Vector2d(-57.25, -57), Math.toRadians(225))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-57.25, -57, Math.toRadians(225)))
+                .setTangent(Math.toRadians(255))
+                .splineToLinearHeading(new Pose2d(-53, -48, Math.toRadians(260)), Math.toRadians(255))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-53, -48, Math.toRadians(255)))
+                .setTangent(Math.toRadians(255))
                 .splineTo(new Vector2d(-57, -57), Math.toRadians(225))
                 .waitSeconds(sto);
 
-        TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(225)))
-                .setTangent(Math.toRadians(260))
-                .splineToLinearHeading(new Pose2d(-53.5, -46.25, Math.toRadians(260)), Math.toRadians(260))
+        TrajectoryActionBuilder GrabSample3 = drive.actionBuilder(new Pose2d(-57 , -57, Math.toRadians(225)))
+                .setTangent(Math.toRadians(255))
+                .splineToLinearHeading(new Pose2d(-63.5, -47.5, Math.toRadians(260)), Math.toRadians(255))
                 .waitSeconds(sto);
 
-        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-53.5, -46.25, Math.toRadians(260)))
-                .setTangent(Math.toRadians(260))
-                .splineTo(new Vector2d(-56.5, -56.5), Math.toRadians(225))
-                .waitSeconds(sto);
-
-        TrajectoryActionBuilder GrabSample3 = drive.actionBuilder(new Pose2d(-56.5 , -56.5, Math.toRadians(225)))
-                .setTangent(Math.toRadians(260))
-                .splineToLinearHeading(new Pose2d(-63.5, -46.25, Math.toRadians(260)), Math.toRadians(260))
-                .waitSeconds(sto);
-
-        TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-63.5, -46.25, Math.toRadians(260)))
+        TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-63.5, -47.5, Math.toRadians(255)))
                 .strafeTo(new Vector2d(-50, -50))
                 .setTangent(Math.toRadians(180))
-                .splineTo(new Vector2d(-57, -57), Math.toRadians(155))
+                .splineTo(new Vector2d(-57.2, -57.2), Math.toRadians(155))
                 .waitSeconds(sto);
-        
 
         TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(155)))
                 .setTangent(Math.toRadians(180))
                 .strafeTo(new Vector2d(-45, -25))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder strafeAway1 = drive.actionBuilder(new Pose2d(-57.25, -57.25, Math.toRadians(155)))
+                .strafeTo(new Vector2d(-55, -55))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder adamisstupid23 = drive.actionBuilder(new Pose2d(-57, -57, Math.toRadians(155)))
+                .strafeTo(new Vector2d(-55, -55))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder adamisstupid33 = drive.actionBuilder(new Pose2d(-57.2, -57.2, Math.toRadians(155)))
+                .strafeTo(new Vector2d(-55, -55))
                 .waitSeconds(sto);
 
         waitForStart();
@@ -311,6 +322,7 @@ public class firstRoadrunner extends LinearOpMode {
                         dropSampleMode,
                         goToBucket1.build(),
                         armBucketShift,
+                        strafeAway1.build(),
                         grabSampleMode,
                         GrabSample2.build(),
                         lowerArm,
@@ -318,6 +330,7 @@ public class firstRoadrunner extends LinearOpMode {
                         dropSampleMode,
                         goToBucket2.build(),
                         armBucketShift2,
+                        adamisstupid23.build(),
                         grabSampleMode,
                         GrabSample3.build(),
                         lowerArm2,
@@ -325,6 +338,7 @@ public class firstRoadrunner extends LinearOpMode {
                         dropSampleMode,
                         goToBucket3.build(),
                         armBucketShift3,
+                        adamisstupid33.build(),
                         grabSampleMode2,
                         end.build()
                         ));
