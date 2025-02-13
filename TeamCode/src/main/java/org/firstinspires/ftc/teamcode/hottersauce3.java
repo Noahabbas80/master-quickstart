@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "faa")
+@TeleOp(name = "hottersauce3")
 
 
-public class faa extends LinearOpMode {
+public class hottersauce3 extends LinearOpMode {
     public double SOA = 0;
     public enum RobotState {
         GRABSAMPLE,
@@ -90,6 +90,7 @@ public class faa extends LinearOpMode {
 
 
         while (opModeIsActive()) {
+
 
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
@@ -224,7 +225,7 @@ public class faa extends LinearOpMode {
 
                 elm.setTargetPosition(1200);
                 erm.setTargetPosition(1200);
-//                arm.setPower(0);
+                arm.setPower(0);
                 screwOverGabe = true; //yippee
                 flMotor.setPower(0);
                 frMotor.setPower(0);
