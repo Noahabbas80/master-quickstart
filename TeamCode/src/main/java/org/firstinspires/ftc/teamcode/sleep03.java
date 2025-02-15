@@ -15,8 +15,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="sleep04")
-public class sleep04 extends LinearOpMode {
+@Autonomous(name="sleep03")
+public class sleep03 extends LinearOpMode {
     @Override
     
     public void runOpMode() throws InterruptedException {

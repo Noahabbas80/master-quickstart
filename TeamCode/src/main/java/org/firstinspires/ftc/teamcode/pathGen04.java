@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="sleep04")
-public class sleep04 extends LinearOpMode {
+public class pathGen04 extends LinearOpMode {
     @Override
     
     public void runOpMode() throws InterruptedException {
@@ -167,14 +167,27 @@ public class sleep04 extends LinearOpMode {
 
         TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-63.5, -47.5, Math.toRadians(255)))
                 .strafeTo(new Vector2d(-50, -50))
-                .setTangent(Math.toRadians(180))
+                .setTangent(Math.toRadians(255))
                 .splineTo(new Vector2d(-58, -58), Math.toRadians(155))
                 .waitSeconds(sto);
+
+        TrajectoryActionBuilder GrabSample4 = drive.actionBuilder(new Pose2d(-58 , -58, Math.toRadians(225)))
+                .setTangent(Math.toRadians(255))
+                .splineToLinearHeading(new Pose2d(-58.62 - 6 , -41, Math.toRadians(315)), Math.toRadians(315))
+                .waitSeconds(sto);
+
+        TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-58.62 - 6, -41, Math.toRadians(315)))
+                .strafeTo(new Vector2d(-50, -50))
+                .setTangent(Math.toRadians(255))
+                .splineTo(new Vector2d(-58, -58), Math.toRadians(155))
+                .waitSeconds(sto);
+
 
         TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(155)))
                 .setTangent(Math. toRadians(180))
                 .strafeTo(new Vector2d(-45, -25))
                 .waitSeconds(sto);
+
 
 
 
@@ -211,6 +224,10 @@ public class sleep04 extends LinearOpMode {
                         goToBucket3.build(),
                         armBucketShift,
                         grabSampleMode,
+                        GrabSample4.build(),
+                        lowerArm,
+                        pickSample,
+                        dropSampleMode,
                         end.build()
                         ));
     }
