@@ -102,6 +102,23 @@ public class pathGen04 extends LinearOpMode {
 
         }
 
+        class grabSampleMode2 implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                spinServo.setPosition(0.3);
+                clawServo.setPosition(0.65);
+                wristServo.setPosition(0.69);
+                armServo.setPosition(0.5);
+
+                elm.setTargetPosition(0);
+                erm.setTargetPosition(0);
+                arm.setTargetPosition(150);
+//                return (erm.getCurrentPosition() > 2200);
+                return false;
+            }
+
+        }
+
 
 
         class lowerArm implements Action {
@@ -124,6 +141,8 @@ public class pathGen04 extends LinearOpMode {
                 return false;
             }
         }
+
+
 
         class armBucketShift implements Action {
             ElapsedTime timer;
@@ -166,14 +185,14 @@ public class pathGen04 extends LinearOpMode {
                 .waitSeconds(sto);
 
         TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-63.5, -47.5, Math.toRadians(255)))
-                .strafeTo(new Vector2d(-50, -50))
+                .strafeTo(new Vector2d(-50, -50)) // set to samp2 coords?
                 .setTangent(Math.toRadians(255))
                 .splineTo(new Vector2d(-58, -58), Math.toRadians(155))
                 .waitSeconds(sto);
 
         TrajectoryActionBuilder GrabSample4 = drive.actionBuilder(new Pose2d(-58 , -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(255))
-                .splineToLinearHeading(new Pose2d(-58.62 - 6 , -41, Math.toRadians(315)), Math.toRadians(315))
+                .splineToLinearHeading(new Pose2d(-58.62 , -41, Math.toRadians(315)), Math.toRadians(315))
                 .waitSeconds(sto);
 
         TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-58.62 - 6, -41, Math.toRadians(315)))
@@ -201,6 +220,7 @@ public class pathGen04 extends LinearOpMode {
         Action dropSampleMode = new dropSampleMode();
         Action armBucketShift = new armBucketShift();
         Action grabSampleMode = new grabSampleMode();
+        Action grabSampleMode2 = new grabSampleMode2();
         Action lowerArm = new lowerArm();
         Action pickSample = new pickSample();
 
@@ -223,7 +243,7 @@ public class pathGen04 extends LinearOpMode {
                         dropSampleMode,
                         goToBucket3.build(),
                         armBucketShift,
-                        grabSampleMode,
+                        grabSampleMode2,
                         GrabSample4.build(),
                         lowerArm,
                         pickSample,
