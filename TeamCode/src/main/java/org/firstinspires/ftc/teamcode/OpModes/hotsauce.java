@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.OpModes;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "forget")
+@TeleOp(name = "hotsauce")
 
 
-public class forget extends LinearOpMode {
+public class hotsauce extends LinearOpMode {
     public double SOA = 0;
     public enum RobotState {
         GRABSAMPLE,
@@ -150,19 +150,19 @@ public class forget extends LinearOpMode {
                 if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
                     clawOpen = !clawOpen;
                 }
-
                 if(currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
                     spinUp = !spinUp;
                 }
 
                 if(currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
                     SOA -= .01;
-                } else if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
+                }
+                else if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
                     SOA += .01;
-                } else if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
+                }
+                else if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
                     SOA = 0;
                 }
-
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49 - .375 * gamepad2.left_stick_x); // write code to disable wrist while moving spinServo
                 armServo.setPosition(0.62 - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
@@ -178,7 +178,6 @@ public class forget extends LinearOpMode {
                 } else if (currentGamepad2.left_stick_button &&  currentGamepad2.right_stick_button) {
                     robotState = RobotState.ASCENTSTART;
                 }
-                
                 break;
             case DROPSAMPLE:
                 clawServo.setPosition(clawOpen ? .65 : .98);
@@ -191,6 +190,7 @@ public class forget extends LinearOpMode {
                 armTarget = 1040;
                 if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
                     clawOpen = !clawOpen;
+//                    sleep(1000); //might need to fix
                 }
                 if(currentGamepad2.left_bumper && !previousGamepad2.left_bumper){
                     robotState = RobotState.GRABSAMPLE;
