@@ -123,6 +123,8 @@ public class chunLi extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
                     armServo.setPosition(0.585);
                     sleep(400);
+                    clawServo.setPosition(0.99);
+                    sleep(250);
                     return false;
                 }
             }
@@ -264,7 +266,6 @@ public class chunLi extends LinearOpMode {
         Action grabSampleMode = new grabSampleMode();
         Action grabSampleMode2 = new grabSampleMode2();
         Action lowerArm = new lowerArm();
-        Action pickSample = new pickSample();
         Action alignWrist = new alignWrist();
         Action raiseArm = new raiseArm();
         Actions.runBlocking(
@@ -275,21 +276,18 @@ public class chunLi extends LinearOpMode {
                         grabSampleMode,
                         GrabSample2.build(),
                         lowerArm,
-                        pickSample,
                         dropSampleMode,
                         goToBucket2.build(),
                         armBucketShift,
                         grabSampleMode,
                         GrabSample3.build(),
                         lowerArm,
-                        pickSample,
                         dropSampleMode,
                         goToBucket3.build(),
                         armBucketShift,
                         grabSampleMode2,
                         GrabSample4.build(),
                         lowerArm,
-                        pickSample,
                         dropSampleMode,
                         goToBucket4.build(),
                         armBucketShift,
@@ -297,7 +295,6 @@ public class chunLi extends LinearOpMode {
                         GrabSample5.build(),
                         alignWrist,
                         lowerArm,
-                        pickSample,
                         raiseArm,
                         backAway.build(),
                         dropSampleMode,
@@ -307,11 +304,4 @@ public class chunLi extends LinearOpMode {
                         end.build()
                         ));
     }
-
-
-
-//      drive.actionBuilder(new Pose2d(-9, -60.5 - off, Math.toRadians(90)))
-//            .lineToX(32)
-//                        .splineTo(new Vector2d(60, -60), Math.toRadians(0)).lineToLinearHeading(new Pose2d(-48, -48 , Math.toRadians(45)))
-//            .build());
 }
