@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 @Autonomous(name="")
-public class chunLi extends LinearOpMode {
+public class cofe extends LinearOpMode {
     @Override
 
     public void runOpMode() throws InterruptedException {
@@ -173,9 +173,9 @@ public class chunLi extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 armServo.setPosition(.59);
-                sleep(500);
+                sleep(400);
                 clawServo.setPosition(0.65);
-                sleep(500);
+                sleep(250);
                 armServo.setPosition(.8);
                 spinServo.setPosition(0.3);
                 sleep(500);
@@ -188,9 +188,8 @@ public class chunLi extends LinearOpMode {
 
 
         TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
-                .strafeTo(new Vector2d(-32.5175,-58))
-                .setTangent(135)
-                .splineTo(new Vector2d(-58, -58), Math.toRadians(225));
+                .setTangent(90)
+                .splineTo(new Vector2d(-58, -58), Math.toRadians(165));
 
         TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(0))
@@ -210,55 +209,53 @@ public class chunLi extends LinearOpMode {
 //
         TrajectoryActionBuilder GrabSample4 = drive.actionBuilder(new Pose2d(-57 , -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-58.62 , -40, Math.toRadians(315)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-58.62 , -41, Math.toRadians(305)), Math.toRadians(90));
 
         TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-58.62, -41, Math.toRadians(315)))
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270));
 
-//        TrajectoryActionBuilder GrabSample5 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
-//                .setTangent(Math.toRadians(0))
-//                .splineToLinearHeading(new Pose2d(-37.5 , -15, Math.toRadians(180)), Math.toRadians(90))
-//                .lineToX(initValues[0])
-//                .lineToY(initValues[1]);
-//
-//        TrajectoryActionBuilder backAway = drive.actionBuilder(new Pose2d(initValues[0], initValues[1], Math.toRadians(180)))
-//                .lineToX(-37.5)
-//                .lineToY(-15);
-//
-//        TrajectoryActionBuilder goToBucket5 = drive.actionBuilder(new Pose2d(initValues[0], initValues[1], Math.toRadians(180)))
-//                 .setTangent(Math.toRadians(180))
-//                .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270));
-//
-//        TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(155)))
-//                .setTangent(Math.toRadians(0))
-//                .splineToLinearHeading(new Pose2d(-40, -12, Math.toRadians(0)), Math.toRadians(90));
+        TrajectoryActionBuilder GrabSample5 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-37.5 , -15, Math.toRadians(180)), Math.toRadians(90))
+                .strafeTo(new Vector2d(initValues[0],initValues[1]));
+
+        TrajectoryActionBuilder backAway = drive.actionBuilder(new Pose2d(initValues[0], initValues[1], Math.toRadians(180)))
+                .strafeTo(new Vector2d(-37.5,-15));
+
+        TrajectoryActionBuilder goToBucket5 = drive.actionBuilder(new Pose2d(initValues[0], initValues[1], Math.toRadians(180)))
+                 .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270));
+
+        TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(155)))
+                .setTangent(Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(-40, -12, Math.toRadians(0)), Math.toRadians(90));
 
 
 
 
 
 
-//        while(!isStarted()){
-//
-//            previousGamepad2.copy(currentGamepad2);
-//            currentGamepad2.copy(gamepad2);
-//            telemetry.addData("Selected:", selected);
-//            telemetry.addData("Sample X Position:", initValues[0]);
-//            telemetry.addData("Sample Y Position:", initValues[1]);
-//            telemetry.addData("Wrist Position:", initValues[2]);
-//
-//            if(currentGamepad2.a && !previousGamepad2.a && selected < 2){
-//                selected++;
-//            } else if(currentGamepad2.x && !previousGamepad2.x && selected > 0){
-//                selected--;
-//            } else if(currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
-//                initValues[selected] -= ((selected == 2) ? 0.05 : 0.25);
-//            } else if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
-//                initValues[selected] += ((selected == 2) ? 0.05 : 0.25);
-//            }
-//            telemetry.update();
-//        }
+        while(!isStarted()){
+
+            previousGamepad2.copy(currentGamepad2);
+            currentGamepad2.copy(gamepad2);
+            telemetry.addData("Selected:", selected);
+            telemetry.addData("Sample X Position:", initValues[0]);
+            telemetry.addData("Sample Y Position:", initValues[1]);
+            telemetry.addData("Wrist Position:", initValues[2]);
+
+            if(currentGamepad2.a && !previousGamepad2.a && selected < 2){
+                selected++;
+            } else if(currentGamepad2.x && !previousGamepad2.x && selected > 0){
+                selected--;
+            } else if(currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
+                initValues[selected] -= (((selected == 2) ? 0.05 : 0.25) * (gamepad2.left_bumper ? 4 : 1));
+            } else if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
+                initValues[selected] += ((selected == 2) ? 0.05 : 0.25)  * (gamepad2.left_bumper ? 4 : 1);
+            }
+            telemetry.update();
+        }
 
         waitForStart();
 
@@ -294,18 +291,18 @@ public class chunLi extends LinearOpMode {
                         lowerArm,
                         dropSampleMode,
                         goToBucket4.build(),
-                        armBucketShift
-//                        grabSampleMode,
-//                        GrabSample5.build(),
-//                        alignWrist,
-//                        lowerArm,
-//                        raiseArm,
-//                        backAway.build(),
-//                        dropSampleMode,
-//                        goToBucket5.build(),
-//                        armBucketShift,
-//                        grabSampleMode,
-//                        end.build()
+                        armBucketShift,
+                        grabSampleMode,
+                        GrabSample5.build(),
+                        alignWrist,
+                        lowerArm,
+                        raiseArm,
+                        backAway.build(),
+                        dropSampleMode,
+                        goToBucket5.build(),
+                        armBucketShift,
+                        grabSampleMode,
+                        end.build()
                         ));
     }
 }
