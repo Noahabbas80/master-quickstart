@@ -28,7 +28,7 @@ public class cofe extends LinearOpMode {
          Gamepad currentGamepad2 = new Gamepad();
          Gamepad previousGamepad2 = new Gamepad();
 
-        double[] initValues = {0.0,0.0,0.5};
+        double[] initValues = {-42,-6.0,0.5};
         DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
         Servo clawServo, wristServo, spinServo, armServo;
 
@@ -49,7 +49,7 @@ public class cofe extends LinearOpMode {
 
         elm.setTargetPosition(0);
         erm.setTargetPosition(0);
-        arm.setTargetPosition(150);
+        arm.setTargetPosition(150 - 25);
 
         elm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         erm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -61,7 +61,7 @@ public class cofe extends LinearOpMode {
 
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
-        spinServo.setPosition(.975);
+        spinServo.setPosition(.3);
         armServo.setPosition(.1);
 
         elm.setDirection(DcMotor.Direction.REVERSE);
@@ -69,14 +69,14 @@ public class cofe extends LinearOpMode {
         class dropSampleMode implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(0.975);
+                spinServo.setPosition(.3);
                 clawServo.setPosition(0.98);
                 wristServo.setPosition(0.49);
                 armServo.setPosition(.7);
 
-                elm.setTargetPosition(2000);
-                erm.setTargetPosition(2000);
-                arm.setTargetPosition(armRaisedTarget);
+                elm.setTargetPosition((int)(2000 * 0.7172413793103448));
+                erm.setTargetPosition((int)(2000 * 0.7172413793103448));
+                arm.setTargetPosition(armRaisedTarget - 25);
                 return (erm.getCurrentPosition() < 250);
             }
 
@@ -86,14 +86,14 @@ public class cofe extends LinearOpMode {
         class grabSampleMode implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(0.3);
+                spinServo.setPosition(.975);
                 clawServo.setPosition(0.65);
                 wristServo.setPosition(0.49);
                 armServo.setPosition(0.5);
 
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
-                arm.setTargetPosition(150);
+                arm.setTargetPosition(150 -25 );
 //                return (erm.getCurrentPosition() > 2200);
                 return false;
             }
@@ -103,14 +103,14 @@ public class cofe extends LinearOpMode {
         class grabSampleMode2 implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(0.3);
+                spinServo.setPosition(.975);
                 clawServo.setPosition(0.65);
                 wristServo.setPosition(0.3);
-                armServo.setPosition(0.5);
+                armServo.setPosition(0.51);
 
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
-                arm.setTargetPosition(150);
+                arm.setTargetPosition(150 -25);
 //                return (erm.getCurrentPosition() > 2200);
                 return false;
             }
@@ -148,7 +148,7 @@ public class cofe extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
 
                 wristServo.setPosition(initValues[2]);
-                sleep(100);
+                sleep(200);
                 return false;
             }
         }
@@ -159,7 +159,7 @@ public class cofe extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket packet) {
 
                 armServo.setPosition(0.35);
-                sleep(200);
+                sleep(250);
                 return false;
             }
         }
@@ -177,7 +177,7 @@ public class cofe extends LinearOpMode {
                 clawServo.setPosition(0.65);
                 sleep(250);
                 armServo.setPosition(.8);
-                spinServo.setPosition(0.3);
+                spinServo.setPosition(.975);
                 sleep(500);
                 return false;
             }
@@ -189,7 +189,7 @@ public class cofe extends LinearOpMode {
 
         TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
                 .setTangent(90)
-                .splineTo(new Vector2d(-58, -58), Math.toRadians(165));
+                .splineToLinearHeading(new Pose2d(-58,-58,Math.toRadians(225)), Math.toRadians(225));
 
         TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(0))
@@ -207,9 +207,9 @@ public class cofe extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(-58, -58, Math.toRadians(225)), Math.toRadians(270));
 //
-        TrajectoryActionBuilder GrabSample4 = drive.actionBuilder(new Pose2d(-57 , -58, Math.toRadians(225)))
+        TrajectoryActionBuilder GrabSample4 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(-58.62 , -41, Math.toRadians(305)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-58.75, -42.25, Math.toRadians(305)), Math.toRadians(90));
 
         TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-58.62, -41, Math.toRadians(315)))
                 .setTangent(Math.toRadians(270))
@@ -217,13 +217,13 @@ public class cofe extends LinearOpMode {
 
         TrajectoryActionBuilder GrabSample5 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-37.5 , -15, Math.toRadians(180)), Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-45 , -15, Math.toRadians(180)), Math.toRadians(0))
                 .strafeTo(new Vector2d(initValues[0],initValues[1]));
 
         TrajectoryActionBuilder backAway = drive.actionBuilder(new Pose2d(initValues[0], initValues[1], Math.toRadians(180)))
-                .strafeTo(new Vector2d(-37.5,-15));
+                .strafeTo(new Vector2d(-45,-15));
 
-        TrajectoryActionBuilder goToBucket5 = drive.actionBuilder(new Pose2d(initValues[0], initValues[1], Math.toRadians(180)))
+        TrajectoryActionBuilder goToBucket5 = drive.actionBuilder(new Pose2d(-45,-15, Math.toRadians(180)))
                  .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270));
 

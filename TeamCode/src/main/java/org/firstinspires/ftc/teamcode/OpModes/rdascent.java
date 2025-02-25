@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "hotsauce")
+@TeleOp(name = "rdascent")
 
 
-public class hotsauce extends LinearOpMode {
+public class rdascent extends LinearOpMode {
     public double SOA = 0;
     public enum RobotState {
         GRABSAMPLE,
@@ -59,16 +59,13 @@ public class hotsauce extends LinearOpMode {
         spinServo = hardwareMap.servo.get("spinServo");
         armServo = hardwareMap.servo.get("armServo");
 
-        elm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        erm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        elm.setTargetPosition(0);
-        erm.setTargetPosition(0);
+
         arm.setTargetPosition(150);
 
-        elm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        erm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         elm.setDirection(DcMotor.Direction.REVERSE);
@@ -76,9 +73,7 @@ public class hotsauce extends LinearOpMode {
         frMotor.setDirection(DcMotor.Direction.REVERSE);
         brMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        elm.setPower(.9);
-        erm.setPower(.9);
-        arm.setPower(0.2);
+        arm.setPower(0.15);
 
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
@@ -95,15 +90,21 @@ public class hotsauce extends LinearOpMode {
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
 
-            if(!screwOverGabe){
-                p1Controls();
-//                arm.setPower(setArmPower());
-                arm.setTargetPosition(armTarget - 25);
+
+            p1Controls();
+            arm.setTargetPosition(0);
+            if(gamepad1.b){
+                elm.setPower(.8);
+                erm.setPower(.8);
+            }
+            else if(gamepad1.a){
+                elm.setPower(-1);
+                erm.setPower(-1);
             }
             else{
-                arm.setPower(0);
+                elm.setPower(0);
+                erm.setPower(0);
             }
-            p2Controls(currentGamepad2, previousGamepad2);
             telem();
 
         }

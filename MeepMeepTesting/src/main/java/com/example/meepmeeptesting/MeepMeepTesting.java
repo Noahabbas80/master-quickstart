@@ -89,7 +89,7 @@ public class MeepMeepTesting {
         int off = unmodifiedOffset/2;
         double wristWidth = 3.442;
         double sto = 0.01;
-        double subSampleX = -25;
+        double subSampleX = -45;
         double subSampleY = -10;
         Pose2d startPose = new Pose2d(-32.5175 , -65.071, Math.toRadians(180));
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
@@ -122,7 +122,7 @@ public class MeepMeepTesting {
                         .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270))
 //                        .waitSeconds(1.25)
                         .setTangent(Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(-37.5 , -15, Math.toRadians(180)), Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(-45 , -15, Math.toRadians(180)), Math.toRadians(0))
                         .strafeTo(new Vector2d(subSampleX,subSampleY))
 //                        .waitSeconds(1.25)
                         .strafeTo(new Vector2d(-37.5,-15))
