@@ -187,6 +187,29 @@ public class cofe extends LinearOpMode {
 
 
 
+        while(!isStarted()){
+
+            previousGamepad2.copy(currentGamepad2);
+            currentGamepad2.copy(gamepad2);
+            telemetry.addData("Selected:", selected);
+            telemetry.addData("Sample X Position:", initValues[0]);
+            telemetry.addData("Sample Y Position:", initValues[1]);
+            telemetry.addData("Wrist Position:", initValues[2]);
+
+            if(currentGamepad2.a && !previousGamepad2.a && selected < 2){
+                selected++;
+            } else if(currentGamepad2.x && !previousGamepad2.x && selected > 0){
+                selected--;
+            } else if(currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
+                initValues[selected] -= (((selected == 2) ? 0.05 : 0.25) * (gamepad2.left_bumper ? 4 : 1));
+            } else if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
+                initValues[selected] += ((selected == 2) ? 0.05 : 0.25)  * (gamepad2.left_bumper ? 4 : 1);
+            }
+            telemetry.update();
+        }
+
+        waitForStart();
+
         TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
                 .setTangent(90)
                 .splineToLinearHeading(new Pose2d(-58,-58,Math.toRadians(225)), Math.toRadians(225));
@@ -211,7 +234,7 @@ public class cofe extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .splineToLinearHeading(new Pose2d(-58.75, -42.25, Math.toRadians(305)), Math.toRadians(90));
 
-        TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-58.62, -41, Math.toRadians(315)))
+        TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-58.62, -42.25, Math.toRadians(305)))
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270));
 
@@ -224,40 +247,13 @@ public class cofe extends LinearOpMode {
                 .strafeTo(new Vector2d(-45,-15));
 
         TrajectoryActionBuilder goToBucket5 = drive.actionBuilder(new Pose2d(-45,-15, Math.toRadians(180)))
-                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270));
+                .setTangent(Math.toRadians(180))
+                .splineTo(new Vector2d(-58,-58),Math.toRadians(225));
 
         TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(155)))
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(-40, -12, Math.toRadians(0)), Math.toRadians(90));
 
-
-
-
-
-
-        while(!isStarted()){
-
-            previousGamepad2.copy(currentGamepad2);
-            currentGamepad2.copy(gamepad2);
-            telemetry.addData("Selected:", selected);
-            telemetry.addData("Sample X Position:", initValues[0]);
-            telemetry.addData("Sample Y Position:", initValues[1]);
-            telemetry.addData("Wrist Position:", initValues[2]);
-
-            if(currentGamepad2.a && !previousGamepad2.a && selected < 2){
-                selected++;
-            } else if(currentGamepad2.x && !previousGamepad2.x && selected > 0){
-                selected--;
-            } else if(currentGamepad2.dpad_left && !previousGamepad2.dpad_left){
-                initValues[selected] -= (((selected == 2) ? 0.05 : 0.25) * (gamepad2.left_bumper ? 4 : 1));
-            } else if(currentGamepad2.dpad_right && !previousGamepad2.dpad_right){
-                initValues[selected] += ((selected == 2) ? 0.05 : 0.25)  * (gamepad2.left_bumper ? 4 : 1);
-            }
-            telemetry.update();
-        }
-
-        waitForStart();
 
 
 
