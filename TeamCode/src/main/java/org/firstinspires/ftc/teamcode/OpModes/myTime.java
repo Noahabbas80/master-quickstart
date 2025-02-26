@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "rdascent")
+@TeleOp(name = "myTime")
 
 
-public class rdascent extends LinearOpMode {
+public class myTime extends LinearOpMode {
     public double SOA = 0;
     public enum RobotState {
         GRABSAMPLE,
@@ -32,12 +32,15 @@ public class rdascent extends LinearOpMode {
     DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
     Servo clawServo, wristServo, spinServo, armServo;
     Servo[] servoList;
+    public int selected = 0;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
     public double speedControl = 1;
     public boolean clawOpen = false;
     public boolean spinUp = false;
     public int armTarget = 150;
+    public int[] slideTargets = {2275,560,1000,3250,1000,550};
+    public double[] slidePowers = {1,.7,.7,1,1,1};
     public boolean screwOverGabe = false;
 
     @Override
@@ -59,13 +62,16 @@ public class rdascent extends LinearOpMode {
         spinServo = hardwareMap.servo.get("spinServo");
         armServo = hardwareMap.servo.get("armServo");
 
-
+        elm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        erm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        elm.setTargetPosition(0);
+        erm.setTargetPosition(0);
+        arm.setTargetPosition(150);
 
-        arm.setTargetPosition(0);
-
-
+        elm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        erm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         elm.setDirection(DcMotor.Direction.REVERSE);
@@ -73,12 +79,14 @@ public class rdascent extends LinearOpMode {
         frMotor.setDirection(DcMotor.Direction.REVERSE);
         brMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        arm.setPower(0.21);
+        elm.setPower(.9);
+        erm.setPower(.9);
+        arm.setPower(0.2);
 
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
         spinServo.setPosition(.975);
-        armServo.setPosition(1);
+        armServo.setPosition(.1);
 
         armTarget = 150;
         waitForStart();
@@ -90,30 +98,24 @@ public class rdascent extends LinearOpMode {
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
 
-
-            p1Controls();
-
-            if(arm.getCurrentPosition() < -200){
-                armServo.setPosition(.5);
+            if(!screwOverGabe){
+                p1Controls();
+                arm.setTargetPosition(armTarget - 25);
             }
             else{
-                armServo.setPosition(1);
+                arm.setPower(0);
             }
-            if(gamepad1.b){
-                elm.setPower(1);
-                erm.setPower(1);
+            if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
+                selected++;
             }
-            else if(gamepad1.a){
-                elm.setPower(-1);
-                erm.setPower(-1);
+            else if(currentGamepad2.left_bumper && !previousGamepad2.left_bumper){
+                selected--;
             }
-            else if(gamepad1.right_bumper){
-             arm.setTargetPosition(-1650);
-            }
-            else{
-                elm.setPower(0);
-                erm.setPower(0);
-            }
+            elm.setTargetPosition(slideTargets[selected % 7]);
+            erm.setTargetPosition(slideTargets[selected % 7]);
+
+            elm.setPower(slidePowers[selected % 7]);
+            erm.setPower(slidePowers[selected % 7]);
             telem();
 
         }
