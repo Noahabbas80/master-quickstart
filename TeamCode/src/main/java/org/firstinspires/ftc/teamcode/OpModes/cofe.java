@@ -317,7 +317,7 @@ public class cofe extends LinearOpMode {
 
         TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-50, -45, Math.toRadians(0)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-50, -15, Math.toRadians(180)), Math.toRadians(0));
 
 
 
