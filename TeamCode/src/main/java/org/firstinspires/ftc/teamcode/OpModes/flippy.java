@@ -1,17 +1,24 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "myTime")
+@TeleOp(name = "flippy")
 
 
-public class myTime extends LinearOpMode {
+public class flippy extends LinearOpMode {
     public double SOA = 0;
+    public static double p = 0.0015, i = 0.12, d = 0.00015;
+    private PIDController controller;
+    public static double f=0.055;
+    public static double target = 0;
+
+    private final double ticksInDegrees = 1425.1/180;
     public enum RobotState {
         GRABSAMPLE,
         DROPSAMPLE,
@@ -32,20 +39,18 @@ public class myTime extends LinearOpMode {
     DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
     Servo clawServo, wristServo, spinServo, armServo;
     Servo[] servoList;
-    public int selected = 0;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
     public double speedControl = 1;
     public boolean clawOpen = false;
     public boolean spinUp = false;
     public int armTarget = 150;
-    public int[] slideTargets = {2275,350,1000,3650,1000,350};
-    public double[] slidePowers = {1,1,1,1,1,1};
+    public int specCycle = 0;
     public boolean screwOverGabe = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
-//        controller = new PIDController(p,i,d);
+        controller = new PIDController(p,i,d);
 
         flMotor = hardwareMap.dcMotor.get("flMotor");
         blMotor = hardwareMap.dcMotor.get("blMotor");
@@ -75,47 +80,46 @@ public class myTime extends LinearOpMode {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         elm.setDirection(DcMotor.Direction.REVERSE);
-
+        arm.setDirection(DcMotor.Direction.REVERSE);
+//
         frMotor.setDirection(DcMotor.Direction.REVERSE);
         brMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        elm.setPower(.9);
-        erm.setPower(.9);
-        arm.setPower(0.2);
+        elm.setPower(.975);
+        erm.setPower(.975);
+        arm.setPower(0.35);
 
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
         spinServo.setPosition(.975);
-        armServo.setPosition(.1);
+        armServo.setPosition(.99);
 
-        armTarget = 150;
+        armTarget = 225;
         waitForStart();
 
 
         while (opModeIsActive()) {
 
+            controller.setPID(p,i,d);
+            int armPos = arm.getCurrentPosition();
+            double pid = controller.calculate(armPos,armTarget);
+            double ff = Math.cos(Math.toRadians(target/ticksInDegrees)) * f;
+
+            double power = ((pid + ff));
 
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
 
             if(!screwOverGabe){
                 p1Controls();
-                arm.setTargetPosition(armTarget - 25);
+//                arm.setPower(power);
+                arm.setTargetPosition(armTarget);
             }
             else{
                 arm.setPower(0);
             }
-            if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
-                selected++;
-            }
-            else if(currentGamepad2.left_bumper && !previousGamepad2.left_bumper){
-                selected--;
-            }
-            elm.setTargetPosition(slideTargets[selected % 7]);
-            erm.setTargetPosition(slideTargets[selected % 7]);
-
-            elm.setPower(slidePowers[selected % 7]);
-            erm.setPower(slidePowers[selected % 7]);
+            p2Controls(currentGamepad2, previousGamepad2);
+//            testServo(armServo);
             telem();
 
         }
@@ -138,8 +142,8 @@ public class myTime extends LinearOpMode {
             speedControl = 1;
         }
 
-        double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x * 1.1;
+        double y = gamepad1.left_stick_y;
+        double x = -gamepad1.left_stick_x * 1.1;
         double rx = -gamepad1.right_stick_x;
 
 
@@ -175,27 +179,32 @@ public class myTime extends LinearOpMode {
                 else if(currentGamepad2.dpad_down && !previousGamepad2.dpad_down){
                     SOA = 0;
                 }
+
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49 - .375 * gamepad2.left_stick_x); // write code to disable wrist while moving spinServo
-                armServo.setPosition(0.62 - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
-                spinServo.setPosition(spinUp ? .99 : 0.3);
+                armServo.setPosition(0.99 - ((0+.07) * (-gamepad2.right_stick_x + 1)));
+                spinServo.setPosition(!spinUp ? .99 : 0.3);
 
-                armTarget = 150;
+                armTarget = 225;
                 erm.setTargetPosition(0);
                 elm.setTargetPosition(0);
 
                 if(spinUp && currentGamepad2.left_bumper && previousGamepad2.left_bumper){
                     spinUp = false;
                     robotState = RobotState.DROPSAMPLE;
-                } else if (currentGamepad2.left_stick_button &&  currentGamepad2.right_stick_button) {
+                }
+                else if(spinUp && currentGamepad2.square && previousGamepad2.square){
+                    robotState = RobotState.HANGSPECIMEN;
+                }
+                else if (currentGamepad2.left_stick_button &&  currentGamepad2.right_stick_button) {
                     robotState = RobotState.ASCENTSTART;
                 }
                 break;
             case DROPSAMPLE:
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.8 - (.1 * (-gamepad2.right_stick_x + 1)));
-                spinServo.setPosition(spinUp ? 0.3 : .975);
+                armServo.setPosition(0.87 - (.1 * (-gamepad2.right_stick_x + 1)));
+                spinServo.setPosition(!spinUp ? 0.3 : .975);
 
                 elm.setTargetPosition((int)(2150* 0.7172413793103448));
                 erm.setTargetPosition((int)(2150* 0.7172413793103448));
@@ -214,15 +223,37 @@ public class myTime extends LinearOpMode {
                 }
 
                 break;
+            case HANGSPECIMEN:
+                clawServo.setPosition(clawOpen ? .65 : .98);
+                wristServo.setPosition(0.49);
+                armServo.setPosition(0.37 - (.1 * (-gamepad2.right_stick_x + 1)));
+                spinServo.setPosition(0.3);
+//                0.7172413793103448)
+                elm.setTargetPosition((int)(2150* 0.7172413793103448));
+                erm.setTargetPosition((int)(2150* 0.7172413793103448));
+                armTarget = 50;
+                if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
+                    clawOpen = !clawOpen;
+                }
+                if(currentGamepad2.square && !previousGamepad2.square){
+                    robotState = RobotState.GRABSAMPLE;
+                    spinUp = false;
+                    clawOpen = true;
+                }
+                else if(currentGamepad2.left_stick_button && currentGamepad2.right_stick_button){
+                    robotState = RobotState.ASCENTSTART;
+                }
+
+                break;
             case ASCENTSTART:
                 clawServo.setPosition(.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(.8);
+                armServo.setPosition(.87);
                 spinServo.setPosition(.975);
 
-                elm.setTargetPosition((int)(2750* 0.7172413793103448));
-                erm.setTargetPosition((int)(2750* 0.7172413793103448));
-                armTarget = 1300;
+                elm.setTargetPosition((int)(2750 * 0.7172413793103448));
+                erm.setTargetPosition((int)(2750 * 0.7172413793103448));
+                armTarget = 800;
                 if(currentGamepad2.right_bumper) {
                     robotState = RobotState.ASCENTEND;
                 } else if (currentGamepad2.x && currentGamepad2.y && currentGamepad2.a && currentGamepad2.b) {
@@ -232,12 +263,12 @@ public class myTime extends LinearOpMode {
             case ASCENTEND:
                 clawServo.setPosition(.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.7);
+                armServo.setPosition(0.77);
                 spinServo.setPosition(.975); //possibly comment servo positions out (since they're the same as last time)
 
-                elm.setTargetPosition((int)(1200* 0.7172413793103448));
-                erm.setTargetPosition((int)(1200* 0.7172413793103448));
-                arm.setPower(0.2);
+                elm.setTargetPosition((int)(1200 * 0.7172413793103448));
+                erm.setTargetPosition((int)(1200 * 0.7172413793103448));
+//                arm.setPower(0.2);
                 screwOverGabe = true; //yippee
                 flMotor.setPower(0);
                 frMotor.setPower(0);
@@ -269,9 +300,12 @@ public class myTime extends LinearOpMode {
         telemetry.addData("erm pos", erm.getTargetPosition());
         telemetry.addData("erm cur pos", erm.getCurrentPosition());
 
-        telemetry.addData("slide power", elm.getPower());
+        telemetry.addData("claw pos", clawServo.getPosition());
+        telemetry.addData("wrist pos", wristServo.getPosition());
+        telemetry.addData("arm pos", armServo.getPosition());
+        telemetry.addData("spin pos", spinServo.getPosition());
 
-
+        telemetry.addData("arm cur pos", arm.getCurrentPosition());
 
 
         telemetry.addData("arm target", armTarget);

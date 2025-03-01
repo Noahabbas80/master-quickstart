@@ -34,10 +34,12 @@ public class hotsauce extends LinearOpMode {
     Servo[] servoList;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
+    public double o = .055;
     public double speedControl = 1;
     public boolean clawOpen = false;
-    public boolean spinUp = false;
+    public boolean spinUp = true;
     public int armTarget = 150;
+    public int specCycle = 0;
     public boolean screwOverGabe = false;
 
     @Override
@@ -76,14 +78,14 @@ public class hotsauce extends LinearOpMode {
         frMotor.setDirection(DcMotor.Direction.REVERSE);
         brMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        elm.setPower(.9);
-        erm.setPower(.9);
-        arm.setPower(0.2);
+        elm.setPower(.975);
+        erm.setPower(.975);
+        arm.setPower(0.275);
 
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
         spinServo.setPosition(.975);
-        armServo.setPosition(.1);
+        armServo.setPosition(.1 + o);
 
         armTarget = 150;
         waitForStart();
@@ -98,12 +100,13 @@ public class hotsauce extends LinearOpMode {
             if(!screwOverGabe){
                 p1Controls();
 //                arm.setPower(setArmPower());
-                arm.setTargetPosition(armTarget - 25);
+                arm.setTargetPosition(armTarget);
             }
             else{
                 arm.setPower(0);
             }
             p2Controls(currentGamepad2, previousGamepad2);
+//            testServo(armServo);
             telem();
 
         }
@@ -165,7 +168,7 @@ public class hotsauce extends LinearOpMode {
                 }
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49 - .375 * gamepad2.left_stick_x); // write code to disable wrist while moving spinServo
-                armServo.setPosition(0.62 - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
+                armServo.setPosition(0.63 + o - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
                 spinServo.setPosition(spinUp ? .99 : 0.3);
 
                 armTarget = 150;
@@ -175,14 +178,18 @@ public class hotsauce extends LinearOpMode {
                 if(spinUp && currentGamepad2.left_bumper && previousGamepad2.left_bumper){
                     spinUp = false;
                     robotState = RobotState.DROPSAMPLE;
-                } else if (currentGamepad2.left_stick_button &&  currentGamepad2.right_stick_button) {
+                }
+                else if(spinUp && currentGamepad2.square && previousGamepad2.square){
+                    robotState = RobotState.HANGSPECIMEN;
+                }
+                else if (currentGamepad2.left_stick_button &&  currentGamepad2.right_stick_button) {
                     robotState = RobotState.ASCENTSTART;
                 }
                 break;
             case DROPSAMPLE:
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.8 - (.1 * (-gamepad2.right_stick_x + 1)));
+                armServo.setPosition(o + 0.8 - (.1 * (-gamepad2.right_stick_x + 1)));
                 spinServo.setPosition(spinUp ? 0.3 : .975);
 
                 elm.setTargetPosition((int)(2150* 0.7172413793103448));
@@ -202,14 +209,36 @@ public class hotsauce extends LinearOpMode {
                 }
 
                 break;
+            case HANGSPECIMEN:
+                clawServo.setPosition(clawOpen ? .65 : .98);
+                wristServo.setPosition(0.49);
+                armServo.setPosition(o + 0.3 - (.1 * (-gamepad2.right_stick_x + 1)));
+                spinServo.setPosition(0.3);
+//                0.7172413793103448)
+                elm.setTargetPosition((int)(2150* 0.7172413793103448));
+                erm.setTargetPosition((int)(2150* 0.7172413793103448));
+                armTarget = 50;
+                if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
+                    clawOpen = !clawOpen;
+                }
+                if(currentGamepad2.square && !previousGamepad2.square){
+                    robotState = RobotState.GRABSAMPLE;
+                    spinUp = false;
+                    clawOpen = true;
+                }
+                else if(currentGamepad2.left_stick_button && currentGamepad2.right_stick_button){
+                    robotState = RobotState.ASCENTSTART;
+                }
+
+                break;
             case ASCENTSTART:
                 clawServo.setPosition(.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(.8);
+                armServo.setPosition(.8+o);
                 spinServo.setPosition(.975);
 
-                elm.setTargetPosition((int)(2750* 0.7172413793103448));
-                erm.setTargetPosition((int)(2750* 0.7172413793103448));
+                elm.setTargetPosition((int)(2750 * 0.7172413793103448));
+                erm.setTargetPosition((int)(2750 * 0.7172413793103448));
                 armTarget = 1300;
                 if(currentGamepad2.right_bumper) {
                     robotState = RobotState.ASCENTEND;
@@ -220,12 +249,12 @@ public class hotsauce extends LinearOpMode {
             case ASCENTEND:
                 clawServo.setPosition(.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.7);
+                armServo.setPosition(0.7 + o);
                 spinServo.setPosition(.975); //possibly comment servo positions out (since they're the same as last time)
 
-                elm.setTargetPosition((int)(1200* 0.7172413793103448));
-                erm.setTargetPosition((int)(1200* 0.7172413793103448));
-                arm.setPower(0.2);
+                elm.setTargetPosition((int)(1200 * 0.7172413793103448));
+                erm.setTargetPosition((int)(1200 * 0.7172413793103448));
+//                arm.setPower(0.2);
                 screwOverGabe = true; //yippee
                 flMotor.setPower(0);
                 frMotor.setPower(0);

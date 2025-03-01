@@ -16,8 +16,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class ABDULSTOPDOINGTHAT extends LinearOpMode {
 
     private PIDController controller;
-    public static double p = 0.0032, i = 0, d = 0.0004;
-    public static double f=0.069;
+    public static double p = 0.0015, i = 0.12, d = 0.0002;
+    public static double f=0.055;
     public static double target = 0;
 
     private final double ticksInDegrees = 1425.1/180;
@@ -31,7 +31,7 @@ public class ABDULSTOPDOINGTHAT extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         arm = hardwareMap.get(DcMotorEx.class,"arm");
         armServo = hardwareMap.servo.get("armServo");
-        armServo.setPosition(0.67 - (.1 * (gamepad2.right_stick_x + 1)));
+//        armServo.setPosition(0.77 - (.1 * (gamepad2.right_stick_x + 1)));
 
         arm.setDirection(DcMotor.Direction.REVERSE);
         waitForStart();
@@ -44,29 +44,23 @@ public class ABDULSTOPDOINGTHAT extends LinearOpMode {
             double power = pid + ff;
 
 
-
+//            armServo.setPosition(.61 + .05 * (-gamepad1.right_stick_x + 1));
+            armServo.setPosition(0.85);
             if(gamepad1.a){
-                target = 1500;
+                target = 175;
             }
             else{
                 target = 1040;
-            }
+         }
 
-//            if(gamepad1.a){
-//                gamepad1.rumble(0.25,0.25,200);
-//                gamepad1.setLedColor(0.9,0.2,0.2,Gamepad.LED_DURATION_CONTINUOUS);
-//                servo.setPosition(0.95);
-//            }
-//            else{
-//                servo.setPosition(0.05 );
-//                gamepad1.setLedColor(0.2,0.9,0.2,Gamepad.LED_DURATION_CONTINUOUS);
-//            }
-            arm.setPower(power);
+                   arm.setPower(power);
             telemetry.addData("pos", armPos);
             telemetry.addData("pid", pid);
             telemetry.addData("ff", ff);
             telemetry.addData("power", power);
             telemetry.addData("target", target);
+
+            telemetry.addData("arms", armServo.getPosition());
 //            telemetry.addData("SERVotarget", servo.getPosition());
             telemetry.update();
         }

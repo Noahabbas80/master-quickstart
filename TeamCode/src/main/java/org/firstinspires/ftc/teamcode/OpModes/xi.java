@@ -18,8 +18,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-@Autonomous(name="cofe")
-public class cofe extends LinearOpMode {
+@Autonomous(name="xi")
+public class xi extends LinearOpMode {
     @Override
 
     public void runOpMode() throws InterruptedException {
@@ -28,7 +28,7 @@ public class cofe extends LinearOpMode {
          Gamepad currentGamepad2 = new Gamepad();
          Gamepad previousGamepad2 = new Gamepad();
 
-        double[] initValues = {0,-7,0.49};
+        double[] initValues = {-42,-6.0,0.49};
         DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
         Servo clawServo, wristServo, spinServo, armServo;
 
@@ -55,13 +55,13 @@ public class cofe extends LinearOpMode {
         erm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        elm.setPower(.975);
-        erm.setPower(.975);
+        elm.setPower(.9);
+        erm.setPower(.9);
         arm.setPower(0.3);
 
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
-        spinServo.setPosition(.975);
+        spinServo.setPosition(.3);
         armServo.setPosition(.1);
 
         elm.setDirection(DcMotor.Direction.REVERSE);
@@ -69,48 +69,31 @@ public class cofe extends LinearOpMode {
         class dropSampleMode implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(.975);
+                spinServo.setPosition(.3);
                 clawServo.setPosition(0.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(.85);
+                armServo.setPosition(.7);
 //0.7172413793103448
-                elm.setTargetPosition((int)(1950 * 0.7172413793103448));
-                erm.setTargetPosition((int)(1950 * 0.7172413793103448));
-                arm.setTargetPosition(armRaisedTarget);
+                elm.setTargetPosition((int)(2000));
+                erm.setTargetPosition((int)(2000));
+                arm.setTargetPosition(armRaisedTarget - 25);
                 return (erm.getCurrentPosition() < 250);
             }
 
 
         }
-        class sdropSampleMode implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(.975);
-                clawServo.setPosition(0.98);
-                wristServo.setPosition(0.49);
-                armServo.setPosition(.85);
-//0.7172413793103448
-                elm.setTargetPosition((int)(1950 * 0.7172413793103448));
-                erm.setTargetPosition((int)(1950 * 0.7172413793103448));
-                arm.setTargetPosition(armRaisedTarget);
-                return (erm.getCurrentPosition() < 900);
-            }
-
-
-        }
-
 
         class grabSampleMode implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(.3);
+                spinServo.setPosition(.975);
                 clawServo.setPosition(0.65);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.6);
+                armServo.setPosition(0.5);
 
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
-                arm.setTargetPosition(150);
+                arm.setTargetPosition(150 -25 );
 //                return (erm.getCurrentPosition() > 2200);
                 return false;
             }
@@ -120,31 +103,14 @@ public class cofe extends LinearOpMode {
         class grabSampleMode2 implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(.3);
+                spinServo.setPosition(.975);
                 clawServo.setPosition(0.65);
                 wristServo.setPosition(0.3);
-                armServo.setPosition(0.6);
+                armServo.setPosition(0.51);
 
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
-                arm.setTargetPosition(150);
-//                return (erm.getCurrentPosition() > 2200);
-                return false;
-            }
-
-        }
-
-        class grabSampleModed implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(.99);
-                clawServo.setPosition(0.65);
-                wristServo.setPosition(0.3);
-                armServo.setPosition(0.67);
-
-                elm.setTargetPosition(0);
-                erm.setTargetPosition(0);
-                arm.setTargetPosition(10);
+                arm.setTargetPosition(150 -25);
 //                return (erm.getCurrentPosition() > 2200);
                 return false;
             }
@@ -154,25 +120,25 @@ public class cofe extends LinearOpMode {
         class grabSampleMode3 implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                spinServo.setPosition(.3);
+                spinServo.setPosition(.975);
                 clawServo.setPosition(0.65);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.6);
+                armServo.setPosition(0.48);
 
                 elm.setTargetPosition(0);
                 erm.setTargetPosition(0);
-                arm.setTargetPosition(150);
+                arm.setTargetPosition(150 -25 );
                 class grabSampleMode implements Action {
                     @Override
                     public boolean run(@NonNull TelemetryPacket packet) {
-                        spinServo.setPosition(.3);
+                        spinServo.setPosition(.975);
                         clawServo.setPosition(0.65);
                         wristServo.setPosition(0.49);
-                        armServo.setPosition(0.8);
+                        armServo.setPosition(0.5);
 
                         elm.setTargetPosition(0);
                         erm.setTargetPosition(0);
-                        arm.setTargetPosition(150);
+                        arm.setTargetPosition(150 -25 );
 //                return (erm.getCurrentPosition() > 2200);
                         return false;
                     }
@@ -188,10 +154,10 @@ public class cofe extends LinearOpMode {
             ElapsedTime timer;
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                    armServo.setPosition(0.68);
-                    sleep(500);
+                    armServo.setPosition(0.5);
+                    sleep(4000);
                     clawServo.setPosition(0.99);
-                    sleep(400);
+                    sleep(2500);
                     return false;
                 }
             }
@@ -237,12 +203,12 @@ public class cofe extends LinearOpMode {
             ElapsedTime timer;
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                armServo.setPosition(.7);
+                armServo.setPosition(.59);
                 sleep(400);
                 clawServo.setPosition(0.65);
                 sleep(250);
-                armServo.setPosition(.85);
-                spinServo.setPosition(.3);
+                armServo.setPosition(.8);
+                spinServo.setPosition(.975);
                 sleep(500);
                 return false;
             }
@@ -281,25 +247,25 @@ public class cofe extends LinearOpMode {
 
         TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-52, -47.25, Math.toRadians(260)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-53, -47.5, Math.toRadians(260)), Math.toRadians(90));
 
-        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-53, -47.25, Math.toRadians(255)))
+        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-53, -47.5, Math.toRadians(255)))
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-58, -58, Math.toRadians(225)), Math.toRadians(270));
 
         TrajectoryActionBuilder GrabSample3 = drive.actionBuilder(new Pose2d(-58 , -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-62, -47.5, Math.toRadians(260)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-63, -47.5, Math.toRadians(260)), Math.toRadians(90));
 //
-            TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62, -47.5, Math.toRadians(260)))
+            TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-63, -47.5, Math.toRadians(260)))
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(-58, -58, Math.toRadians(225)), Math.toRadians(270));
 //
         TrajectoryActionBuilder GrabSample4 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
-                .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-59, -42.25, Math.toRadians(305)), Math.toRadians(90));
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-58.65, -40, Math.toRadians(305)), Math.toRadians(90));
 
-        TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-59, -42.25, Math.toRadians(305)))
+        TrajectoryActionBuilder goToBucket4 = drive.actionBuilder(new Pose2d(-58.75, -42.25, Math.toRadians(305)))
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270));
 
@@ -313,59 +279,34 @@ public class cofe extends LinearOpMode {
 
         TrajectoryActionBuilder goToBucket5 = drive.actionBuilder(new Pose2d(-45,-15, Math.toRadians(180)))
                 .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(-58,-58,Math.toRadians(225)),Math.toRadians(225));
+                .splineToLinearHeading(new Pose2d(-58,-58,Math.toRadians(225)),Math.toRadians(270));
 
         TrajectoryActionBuilder end = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-50, -45, Math.toRadians(0)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-40, -12, Math.toRadians(0)), Math.toRadians(90));
+
+        TrajectoryActionBuilder awesome = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-45 , -15, Math.toRadians(180)), Math.toRadians(0))
+                .strafeTo(new Vector2d(initValues[0] - 13.5,initValues[1]));
 
 
-
-
-        Action sdropSampleMode = new sdropSampleMode();
         Action dropSampleMode = new dropSampleMode();
         Action armBucketShift = new armBucketShift();
         Action grabSampleMode = new grabSampleMode();
         Action grabSampleMode2 = new grabSampleMode2();
         Action grabSampleMode3 = new grabSampleMode3();
-        Action grabSampleModed = new grabSampleModed();
         Action lowerArm = new lowerArm();
         Action alignWrist = new alignWrist();
         Action raiseArm = new raiseArm();
         Actions.runBlocking(
                 new SequentialAction(
-                        sdropSampleMode,
+                        dropSampleMode,
                         goToBucket1.build(),
                         armBucketShift,
                         grabSampleMode,
-                        GrabSample2.build(),
-                        lowerArm,
-                        dropSampleMode,
-                        goToBucket2.build(),
-                        armBucketShift,
-                        grabSampleMode,
-                        GrabSample3.build(),
-                        lowerArm,
-                        dropSampleMode,
-                        goToBucket3.build(),
-                        armBucketShift,
-                        grabSampleMode2,
-                        GrabSample4.build(),
-                        lowerArm,
-                        dropSampleMode,
-                        goToBucket4.build(),
-                        armBucketShift,
-//                        grabSampleMode3,
-//                        GrabSample5.build(),
-//                        alignWrist,
-//                        lowerArm,
-//                        raiseArm,
-//                        backAway.build(),
-//                        dropSampleMode,
-//                        goToBucket5.build(),
-//                        armBucketShift,
-                        grabSampleModed,
-                        end.build()
+                        awesome.build(),
+                        lowerArm
                         ));
     }
 }
