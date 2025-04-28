@@ -188,7 +188,7 @@ public class newCofe extends LinearOpMode {
             ElapsedTime timer;
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                    armServo.setPosition(0.68);
+                    armServo.setPosition(0.7);
                     sleep(500);
                     clawServo.setPosition(0.99);
                     sleep(400);
@@ -281,9 +281,9 @@ public class newCofe extends LinearOpMode {
 
         TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-52, -47.25, Math.toRadians(260)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-52, -46.5, Math.toRadians(260)), Math.toRadians(90));
 
-        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-53, -47.25, Math.toRadians(255)))
+        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-52, -46.5, Math.toRadians(255)))
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-58, -58, Math.toRadians(225)), Math.toRadians(270));
 
@@ -291,7 +291,7 @@ public class newCofe extends LinearOpMode {
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-62, -47.5, Math.toRadians(260)), Math.toRadians(90));
 //
-            TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62, -47.5, Math.toRadians(260)))
+            TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62, -46.5, Math.toRadians(260)))
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(-58, -58, Math.toRadians(225)), Math.toRadians(270));
 //

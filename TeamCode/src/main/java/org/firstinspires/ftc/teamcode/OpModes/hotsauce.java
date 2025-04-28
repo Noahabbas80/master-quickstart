@@ -85,7 +85,7 @@ public class hotsauce extends LinearOpMode {
         clawServo.setPosition(0.98);
         wristServo.setPosition(0.49);
         spinServo.setPosition(.975);
-        armServo.setPosition(.1 + o);
+        armServo.setPosition(.4 + o);
 
         armTarget = 150;
         waitForStart();
@@ -168,7 +168,7 @@ public class hotsauce extends LinearOpMode {
                 }
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49 - .375 * gamepad2.left_stick_x); // write code to disable wrist while moving spinServo
-                armServo.setPosition(0.63 + o - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
+                armServo.setPosition(0.66 + o - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
                 spinServo.setPosition(spinUp ? .99 : 0.3);
 
                 armTarget = 150;
@@ -179,9 +179,6 @@ public class hotsauce extends LinearOpMode {
                     spinUp = false;
                     robotState = RobotState.DROPSAMPLE;
                 }
-                else if(spinUp && currentGamepad2.square && previousGamepad2.square){
-                    robotState = RobotState.HANGSPECIMEN;
-                }
                 else if (currentGamepad2.left_stick_button &&  currentGamepad2.right_stick_button) {
                     robotState = RobotState.ASCENTSTART;
                 }
@@ -189,7 +186,7 @@ public class hotsauce extends LinearOpMode {
             case DROPSAMPLE:
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(o + 0.8 - (.1 * (-gamepad2.right_stick_x + 1)));
+                armServo.setPosition(o + 0.85 - (.1 * (-gamepad2.right_stick_x + 1)));
                 spinServo.setPosition(spinUp ? 0.3 : .975);
 
                 elm.setTargetPosition((int)(2150* 0.7172413793103448));
@@ -234,7 +231,7 @@ public class hotsauce extends LinearOpMode {
             case ASCENTSTART:
                 clawServo.setPosition(.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(.8+o);
+                armServo.setPosition(.95);
                 spinServo.setPosition(.975);
 
                 elm.setTargetPosition((int)(2750 * 0.7172413793103448));
@@ -249,7 +246,7 @@ public class hotsauce extends LinearOpMode {
             case ASCENTEND:
                 clawServo.setPosition(.98);
                 wristServo.setPosition(0.49);
-                armServo.setPosition(0.7 + o);
+                armServo.setPosition(0.95);
                 spinServo.setPosition(.975); //possibly comment servo positions out (since they're the same as last time)
 
                 elm.setTargetPosition((int)(1200 * 0.7172413793103448));

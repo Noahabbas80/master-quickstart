@@ -18,7 +18,7 @@ public class MeepMeepTesting {
         double sto = 0.01;
         double subSampleX = -8;
         double subSampleY = -12;
-        double[] initValues = {-7,-10,0.5};
+        double[] initValues = {-3,-15,0.5};
         Pose2d startPose = new Pose2d(-32.5175 , -65.071, Math.toRadians(180));
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, t rack width
@@ -41,13 +41,11 @@ public class MeepMeepTesting {
                         .setTangent(Math.toRadians(270))
                         .splineToLinearHeading(new Pose2d(-58 , -58, Math.toRadians(225)), Math.toRadians(270))
                         .setTangent(Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(-45 , -15, Math.toRadians(180)), Math.toRadians(0))
-                        .strafeTo(new Vector2d(initValues[0] - 13.5,initValues[1]))
-                        .strafeTo(new Vector2d(-45,-15))
+                        .splineToLinearHeading(new Pose2d(initValues[0] - 13.5,initValues[1], Math.toRadians(180)), Math.toRadians(0))
+                        .strafeTo(new Vector2d(-45,initValues[1]))
                         .setTangent(Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(-58,-58,Math.toRadians(225)),Math.toRadians(225))
-                        .setTangent(Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(-50, -15, Math.toRadians(180)), Math.toRadians(0))
+                        .splineToLinearHeading(new Pose2d(-58,-58,Math.toRadians(225)),Math.toRadians(270))
+                        .strafeTo(new Vector2d(-55,-40))
                         .build());
 
 
