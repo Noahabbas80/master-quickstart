@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "hotsauce")
+@TeleOp(name = "BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 ")
 
 
-public class hotsauce extends LinearOpMode {
+public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends LinearOpMode {
     public double SOA = 0;
     public enum RobotState {
         GRABSAMPLE,
@@ -73,7 +73,7 @@ public class hotsauce extends LinearOpMode {
         erm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        elm.setDirection(DcMotor.Direction.REVERSE);
+        erm.setDirection(DcMotor.Direction.REVERSE);
 
         frMotor.setDirection(DcMotor.Direction.REVERSE);
         brMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -129,7 +129,7 @@ public class hotsauce extends LinearOpMode {
             speedControl = 1;
         }
 
-        double y = -gamepad1.left_stick_y;
+        double y = gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x * 1.1;
         double rx = -gamepad1.right_stick_x;
 
