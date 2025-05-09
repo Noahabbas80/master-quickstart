@@ -168,7 +168,7 @@ public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends
                 }
                 clawServo.setPosition(clawOpen ? .65 : .98);
                 wristServo.setPosition(0.49 - .375 * gamepad2.left_stick_x); // write code to disable wrist while moving spinServo
-                armServo.setPosition(0.66 + o - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
+                armServo.setPosition(0.66 +.01 + o - ((SOA+.07) * (-gamepad2.right_stick_x + 1)));
                 spinServo.setPosition(spinUp ? .99 : 0.3);
 
                 armTarget = 150;

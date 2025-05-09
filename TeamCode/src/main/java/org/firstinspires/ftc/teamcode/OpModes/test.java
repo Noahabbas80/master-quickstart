@@ -18,8 +18,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
-@Autonomous(name="newCofe")
-public class newCofe extends LinearOpMode {
+@Autonomous(name="test")
+public class test extends LinearOpMode {
     @Override
 
     public void runOpMode() throws InterruptedException {
@@ -274,6 +274,10 @@ public class newCofe extends LinearOpMode {
         }
 
         waitForStart();
+        TrajectoryActionBuilder test1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-5,-65.071))
+                .strafeTo(new Vector2d(-32.5175,-65.071))
+                .strafeTo(new Vector2d(-32.5175,-55));
 
         TrajectoryActionBuilder goToBucket1 = drive.actionBuilder(new Pose2d(-32.5175 , -65.071, Math.toRadians(180)))
                 .setTangent(90)
@@ -334,27 +338,8 @@ public class newCofe extends LinearOpMode {
         Action raiseArm = new raiseArm();
         Actions.runBlocking(
                 new SequentialAction(
-                        sdropSampleMode,
-                        goToBucket1.build(),
-                        armBucketShift,
                         grabSampleMode,
-                        GrabSample2.build(),
-                        lowerArm,
-                        dropSampleMode,
-                        goToBucket2.build(),
-                        armBucketShift,
-                        grabSampleMode,
-                        GrabSample3.build(),
-                        lowerArm,
-                        dropSampleMode,
-                        goToBucket3.build(),
-                        armBucketShift,
-                        grabSampleMode2,
-                        GrabSample4.build(),
-                        lowerArm,
-                        dropSampleMode,
-                        goToBucket4.build(),
-                        armBucketShift,
+                        test1.build()
 //                        grabSampleMode3,
 //                        GrabSample5.build(),
 //                        alignWrist,
@@ -364,8 +349,6 @@ public class newCofe extends LinearOpMode {
 //                        dropSampleMode,
 //                        goToBucket5.build(),
 //                        armBucketShift,
-                        grabSampleModed,
-                        end.build()
                         ));
     }
 }

@@ -64,7 +64,7 @@ public class pringlesbblyan999hotdog extends LinearOpMode {
         spinServo.setPosition(.975);
         armServo.setPosition(.1);
 
-        elm.setDirection(DcMotor.Direction.REVERSE);
+        erm.setDirection(DcMotor.Direction.REVERSE);
 
         class dropSampleMode implements Action {
             @Override
