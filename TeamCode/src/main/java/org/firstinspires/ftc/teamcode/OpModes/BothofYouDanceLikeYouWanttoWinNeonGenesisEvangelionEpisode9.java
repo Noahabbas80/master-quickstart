@@ -129,7 +129,7 @@ public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends
             speedControl = 1;
         }
 
-        double y = gamepad1.left_stick_y;
+        double y = -gamepad1.left_stick_y;
         double x = gamepad1.left_stick_x * 1.1;
         double rx = -gamepad1.right_stick_x;
 
