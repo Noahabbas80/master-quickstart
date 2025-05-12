@@ -281,17 +281,17 @@ public class newCofe extends LinearOpMode {
 
         TrajectoryActionBuilder GrabSample2 = drive.actionBuilder(new Pose2d(-58, -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(0))
-                .splineToLinearHeading(new Pose2d(-52, -46.5, Math.toRadians(260)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-52, -47, Math.toRadians(260)), Math.toRadians(90));
 
-        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-52, -46.5, Math.toRadians(255)))
+        TrajectoryActionBuilder goToBucket2 = drive.actionBuilder(new Pose2d(-52, -47, Math.toRadians(255)))
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(-58, -58, Math.toRadians(225)), Math.toRadians(270));
 
         TrajectoryActionBuilder GrabSample3 = drive.actionBuilder(new Pose2d(-58 , -58, Math.toRadians(225)))
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-62, -47.5, Math.toRadians(260)), Math.toRadians(90));
+                .splineToLinearHeading(new Pose2d(-62, -47, Math.toRadians(260)), Math.toRadians(90));
 //
-            TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62, -46.5, Math.toRadians(260)))
+            TrajectoryActionBuilder goToBucket3 = drive.actionBuilder(new Pose2d(-62, -47, Math.toRadians(260)))
                 .setTangent(Math.toRadians(0))
                 .splineToLinearHeading(new Pose2d(-58, -58, Math.toRadians(225)), Math.toRadians(270));
 //
