@@ -20,14 +20,9 @@ public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends
         TAKESPECIMEN,
         HANGSPECIMEN,
     };
-    public enum GrabState {
-        BACK,
-        FRONT,
-        CENTER,
-    };
+
 
     RobotState robotState = RobotState.GRABSAMPLE;
-    GrabState grabState = GrabState.CENTER;
 
     DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
     Servo clawServo, wristServo, spinServo, armServo;
@@ -90,9 +85,7 @@ public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends
         armTarget = 150;
         waitForStart();
 
-
         while (opModeIsActive()) {
-
 
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
@@ -112,15 +105,7 @@ public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends
         }
     }
 
-    public double setArmPower(){
-        double kpAtHome = 500;
-        double unscaledPower = (armTarget - arm.getCurrentPosition())/kpAtHome;
-        unscaledPower = (unscaledPower > 1 ? 1 : unscaledPower);
-        return unscaledPower*.3 + (0.2 * Math.signum(unscaledPower));
-    }
-
     public void p1Controls() {
-//
         if (gamepad1.dpad_down) {
             speedControl = 0.25;
         } else if (gamepad1.dpad_left || gamepad1.dpad_right) {
@@ -211,7 +196,6 @@ public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends
                 wristServo.setPosition(0.49);
                 armServo.setPosition(o + 0.3 - (.1 * (-gamepad2.right_stick_x + 1)));
                 spinServo.setPosition(0.3);
-//                0.7172413793103448)
                 elm.setTargetPosition((int)(2150* 0.7172413793103448));
                 erm.setTargetPosition((int)(2150* 0.7172413793103448));
                 armTarget = 50;
@@ -251,8 +235,8 @@ public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends
 
                 elm.setTargetPosition((int)(1200 * 0.7172413793103448));
                 erm.setTargetPosition((int)(1200 * 0.7172413793103448));
-//                arm.setPower(0.2);
-                screwOverGabe = true; //yippee
+                arm.setPower(0.2);
+                screwOverGabe = true;
                 flMotor.setPower(0);
                 frMotor.setPower(0);
                 brMotor.setPower(0);
@@ -289,7 +273,6 @@ public class BothofYouDanceLikeYouWanttoWinNeonGenesisEvangelionEpisode9 extends
         telemetry.addData("spin pos", spinServo.getPosition());
 
         telemetry.addData("arm cur pos", arm.getCurrentPosition());
-
 
         telemetry.addData("arm target", armTarget);
         telemetry.addData("current state", robotState);
