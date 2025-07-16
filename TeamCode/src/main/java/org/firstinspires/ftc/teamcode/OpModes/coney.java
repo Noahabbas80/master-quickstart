@@ -11,19 +11,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 public class coney extends LinearOpMode {
-    public enum RobotState {
-        GRABSAMPLE,
-        DROPSAMPLE,
-        ASCENTSTART,
-        ASCENTEND,
-        TAKESPECIMEN,
-        HANGSPECIMEN,
+    public enum IntakeState {
+        GRAB,
+        DROP,
+        FOLD,
     };
 
 
-    RobotState robotState = RobotState.GRABSAMPLE;
+    IntakeState intake = IntakeState.FOLD;
 
     DcMotor frMotor, blMotor, flMotor, brMotor;
+    DcMotor[] motorList;
     Servo autoServo, baseServo, intakeServo;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
@@ -31,31 +29,26 @@ public class coney extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-//        controller = new PIDController(p,i,d);
 
         flMotor = hardwareMap.dcMotor.get("flMotor");
         blMotor = hardwareMap.dcMotor.get("blMotor");
         frMotor = hardwareMap.dcMotor.get("frMotor");
         brMotor = hardwareMap.dcMotor.get("brMotor");
-//        brMotor = hardwareMap.dcMotor.get("outMotor");
-
 
         autoServo = hardwareMap.servo.get("autoServo");
         intakeServo = hardwareMap.servo.get("intakeServo");
         baseServo = hardwareMap.servo.get("baseServo");
 
-//        frMotor.setDirection(DcMotor.Direction.REVERSE);
-//        brMotor.setDirection(DcMotor.Direction.REVERSE);
-//        blMotor.setDirection(DcMotor.Direction.REVERSE);
-//        flMotor.setDirection(DcMotor.Direction.REVERSE);
+//        brMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        blMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        frMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        flMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        brMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        blMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        flMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        motorList = new DcMotor[]{frMotor, flMotor, blMotor, brMotor};
         waitForStart();
-
+        for (DcMotor motor : motorList) {
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
 
         while (opModeIsActive()) {
             previousGamepad2.copy(currentGamepad2);
