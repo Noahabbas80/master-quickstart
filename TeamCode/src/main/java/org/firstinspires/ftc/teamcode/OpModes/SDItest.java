@@ -40,7 +40,7 @@ public class SDItest extends LinearOpMode {
 
 //        elm.setPower(.975);
 
-        clawServo.setPosition(0.98);
+        servo.setPosition(0.98);
 
         waitForStart();
 
@@ -78,7 +78,7 @@ public class SDItest extends LinearOpMode {
     }
 
     public void p2Controls(Gamepad currentGamepad2, Gamepad previousGamepad2) {
-        
+
     }
 
     public void telem() {
