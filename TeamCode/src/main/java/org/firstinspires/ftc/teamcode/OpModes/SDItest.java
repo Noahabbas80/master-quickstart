@@ -12,35 +12,41 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class SDItest extends LinearOpMode {
 
-    DcMotor frMotor, blMotor, flMotor, brMotor;
-    Servo servo;
+    DcMotor fr, bl, fl, br, sl, sr;
+    Servo linkServo;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        flMotor = hardwareMap.dcMotor.get("flMotor");
-        blMotor = hardwareMap.dcMotor.get("blMotor");
-        frMotor = hardwareMap.dcMotor.get("frMotor");
-        brMotor = hardwareMap.dcMotor.get("brMotor");
+        fl = hardwareMap.dcMotor.get("fl");
+        bl = hardwareMap.dcMotor.get("bl");
+        fr = hardwareMap.dcMotor.get("fr");
+        br = hardwareMap.dcMotor.get("br");
+        sr = hardwareMap.dcMotor.get("sr");
+        sl = hardwareMap.dcMotor.get("sl");
 
-        servo = hardwareMap.servo.get("servo");
+        linkServo = hardwareMap.servo.get("linkServo");
 
-//        elm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-//        elm.setTargetPosition(0);
+        sr.setTargetPosition(0);
+        sl.setTargetPosition(0);
 
-//        elm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-//        erm.setDirection(DcMotor.Direction.REVERSE);
+        sl.setDirection(DcMotor.Direction.REVERSE);
 
-//        frMotor.setDirection(DcMotor.Direction.REVERSE);
-//        brMotor.setDirection(DcMotor.Direction.REVERSE);
+//        fr.setDirection(DcMotor.Direction.REVERSE);
+//        br.setDirection(DcMotor.Direction.REVERSE);
 
-//        elm.setPower(.975);
+        sr.setPower(.975);
+        sl.setPower(.975);
 
-        servo.setPosition(0.98);
+        linkServo.setPosition(0.98);
 
         waitForStart();
 
@@ -70,19 +76,19 @@ public class SDItest extends LinearOpMode {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        flMotor.setPower((frontLeftPower));
-        blMotor.setPower((backLeftPower));
-        frMotor.setPower((frontRightPower));
-        brMotor.setPower((backRightPower));
+        fl.setPower((frontLeftPower));
+        bl.setPower((backLeftPower));
+        fr.setPower((frontRightPower));
+        br.setPower((backRightPower));
 
     }
 
     public void p2Controls(Gamepad currentGamepad2, Gamepad previousGamepad2) {
-
+        
     }
 
     public void telem() {
-        telemetry.addData("elm pos", servo.getPosition());
+        telemetry.addData("elm pos", linkServo.getPosition());
         telemetry.update();
     }
 
