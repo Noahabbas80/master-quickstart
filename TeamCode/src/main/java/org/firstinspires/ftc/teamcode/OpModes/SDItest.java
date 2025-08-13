@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,9 +14,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class SDItest extends LinearOpMode {
 
     DcMotor fr, bl, fl, br, sl, sr;
-    Servo linkServo;
+    Servo linkServo, headServo, frontClawServo, backClawServo, armServo,workServo;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
+    public boolean headUp = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,23 +30,33 @@ public class SDItest extends LinearOpMode {
         sl = hardwareMap.dcMotor.get("sl");
 
         linkServo = hardwareMap.servo.get("linkServo");
+        workServo = hardwareMap.servo.get("workServo");
+        headServo = hardwareMap.servo.get("headServo");
+        frontClawServo = hardwareMap.servo.get("frontClawServo");
+        backClawServo = hardwareMap.servo.get("backClawServo");
+        armServo = hardwareMap.servo.get("armServo");
 
         sr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         sr.setTargetPosition(0);
         sl.setTargetPosition(0);
+        frontClawServo.setPosition(1);
+        backClawServo.setPosition(1);
+
 
         sr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         sl.setDirection(DcMotor.Direction.REVERSE);
 
-//        fr.setDirection(DcMotor.Direction.REVERSE);
-//        br.setDirection(DcMotor.Direction.REVERSE);
+        fr.setDirection(DcMotor.Direction.REVERSE);
+        br.setDirection(DcMotor.Direction.REVERSE);
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.REVERSE);
 
-        sr.setPower(.975);
-        sl.setPower(.975);
+        sr.setPower(.8);
+        sl.setPower(.8);
 
         linkServo.setPosition(0.98);
 
@@ -66,8 +78,8 @@ public class SDItest extends LinearOpMode {
     public void p1Controls() {
 
         double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x * 1.1;
-        double rx = -gamepad1.right_stick_x;
+        double x = -gamepad1.left_stick_x * 1.1;
+        double rx = gamepad1.right_stick_x;
 
 
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
@@ -84,11 +96,34 @@ public class SDItest extends LinearOpMode {
     }
 
     public void p2Controls(Gamepad currentGamepad2, Gamepad previousGamepad2) {
-        
+        armServo.setPosition(.45);
+        workServo.setPosition(gamepad2.left_stick_x/2 + .5);
+        headServo.setPosition(headUp ? 0 : .2);
+        linkServo.setPosition(gamepad2.right_trigger * -.3 + .63);
+
+        if(currentGamepad2.circle && !previousGamepad2.circle){
+            headUp = !headUp;
+        }
+        if(currentGamepad2.x){
+            sl.setTargetPosition(2100);
+            sr.setTargetPosition(2100);
+        }
+        else{
+            sl.setTargetPosition(15);
+            sr.setTargetPosition(15);
+        }
     }
 
+
     public void telem() {
-        telemetry.addData("elm pos", linkServo.getPosition());
+        telemetry.addData("elm pos", armServo.getPosition());
+        telemetry.addData("back claw", linkServo.getPosition());
+        telemetry.addData("head claw", headServo.getPosition());
+
+        telemetry.addData("work claw", workServoa1.getPosition());
+
+        telemetry.addData("SR pos", sr.getCurrentPosition());
+        telemetry.addData("Sl pos", sl.getCurrentPosition());
         telemetry.update();
     }
 
