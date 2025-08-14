@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,17 +13,17 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+@Config
+@TeleOp(name = "PIDtest")
 
-@TeleOp(name = "SDItest")
 
-
-public class SDItest extends LinearOpMode {
+public class PIDtest extends LinearOpMode {
 
     DcMotor leftFront, leftBack, rightFront, rightBack, slide,pivot0,pivot2;
     Servo clawServo, wristServo;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
-    public int sv = 0;
+
 
     public enum RobotState {
         GRABSAMPLE,
@@ -29,6 +33,17 @@ public class SDItest extends LinearOpMode {
     RobotState state = RobotState.DROPSAMPLE;
     public boolean clawOpen = false;
     public boolean slideOut = false;
+
+    private PIDController controller;
+
+    public static double p = 0.02, i = 0.07, d = 0.0001;
+    public static double f = 0.2;
+
+
+public int target = 100;
+
+    private final double ticks_in_degree = 1425 / 180;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -60,19 +75,37 @@ public class SDItest extends LinearOpMode {
         pivot2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         slide.setTargetPosition(-5);
-        pivot0.setTargetPosition(400);
-        pivot2.setTargetPosition(-400);
         clawServo.setPosition(.35);
 
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telem();
+
+        controller = new PIDController(p, i, d);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+
+
+        pivot0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
 
         while (opModeIsActive()) {
+
+            target = ((int)(450 + gamepad2.left_stick_x * -250));
+            controller.setPID(p, i, d);
+
+            int armPos = pivot0.getCurrentPosition();
+            double pid = controller.calculate(armPos, target);
+            double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
+
+            double power = pid + ff;
+
+            pivot0.setPower(power);
+
+            telemetry.addData("pos ", armPos);
+            telemetry.addData("target ", target);
+
 
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
@@ -118,12 +151,13 @@ public class SDItest extends LinearOpMode {
         }
         else if(state == RobotState.DROPSAMPLE){
             slide.setTargetPosition((int)(slideOut ? -240 : -5));
+
             if(gamepad2.dpad_down){
                 state = RobotState.GRABSAMPLE;
             }
         }
 
-        wristServo.setPosition( gamepad2.right_stick_x *.375 + .62);
+        wristServo.setPosition( gamepad2.left_trigger *.375 + gamepad2.right_trigger * -.375 + .62);
         if(currentGamepad.right_bumper && !previousGamepad.right_bumper){
                     clawOpen = !clawOpen;
                 }
@@ -131,7 +165,7 @@ public class SDItest extends LinearOpMode {
             slideOut = !slideOut;
         }
         clawServo.setPosition(clawOpen ? .35 : .65);
-        pivot0.setTargetPosition((int)(600 + gamepad2.left_stick_x * -250));
+
     }
 
     public void telem() {

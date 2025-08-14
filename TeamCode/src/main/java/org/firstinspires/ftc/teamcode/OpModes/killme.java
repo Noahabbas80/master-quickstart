@@ -10,10 +10,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@TeleOp(name = "SDItest")
+@TeleOp(name = "killme")
 
 
-public class SDItest extends LinearOpMode {
+public class killme extends LinearOpMode {
 
     DcMotor leftFront, leftBack, rightFront, rightBack, slide,pivot0,pivot2;
     Servo clawServo, wristServo;
@@ -108,8 +108,9 @@ public class SDItest extends LinearOpMode {
 
         if(state == RobotState.GRABSAMPLE){
 
-            slide.setTargetPosition((int)(slideOut ? -240 : -5));
-
+            slide.setTargetPosition((int)(slideOut ? -250 : -5));
+            pivot0.setTargetPosition((int)(740 + gamepad2.left_stick_x * 125));
+            pivot2.setTargetPosition((int)(-740 - gamepad2.left_stick_x * 125));
             if(gamepad2.dpad_up){
                 state = RobotState.DROPSAMPLE;
             }
@@ -117,7 +118,9 @@ public class SDItest extends LinearOpMode {
 
         }
         else if(state == RobotState.DROPSAMPLE){
-            slide.setTargetPosition((int)(slideOut ? -240 : -5));
+            slide.setTargetPosition((int)(slideOut ? -250 : -5));
+            pivot0.setTargetPosition((int)(350 + gamepad2.left_stick_x * -60));
+            pivot2.setTargetPosition((int)(-350 - gamepad2.left_stick_x * -60));
             if(gamepad2.dpad_down){
                 state = RobotState.GRABSAMPLE;
             }
@@ -131,7 +134,6 @@ public class SDItest extends LinearOpMode {
             slideOut = !slideOut;
         }
         clawServo.setPosition(clawOpen ? .35 : .65);
-        pivot0.setTargetPosition((int)(600 + gamepad2.left_stick_x * -250));
     }
 
     public void telem() {

@@ -1,26 +1,33 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@TeleOp(name = "SDItest")
+@Config
+@TeleOp(name = "PIDtest2")
 
 
-public class SDItest extends LinearOpMode {
+public class PIDtest2 extends LinearOpMode {
 
-    DcMotor leftFront, leftBack, rightFront, rightBack, slide,pivot0,pivot2;
+    DcMotor leftFront, leftBack, rightFront, rightBack, slide,pivot0;
     Servo clawServo, wristServo;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
-    public int sv = 0;
 
+    double myVariable = 200; // the thing you're adjusting
+    ElapsedTime timer = new ElapsedTime();
     public enum RobotState {
         GRABSAMPLE,
         DROPSAMPLE,
@@ -29,8 +36,20 @@ public class SDItest extends LinearOpMode {
     RobotState state = RobotState.DROPSAMPLE;
     public boolean clawOpen = false;
     public boolean slideOut = false;
+
+    private PIDController controller;
+
+    public static double p = 0.02, i = 0.07, d = 0.0001;
+    public static double f = 0.2;
+
+
+public int target = 100;
+
+    private final double ticks_in_degree = 1425 / 180;
+
     @Override
     public void runOpMode() throws InterruptedException {
+        timer.reset();
 
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
         leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
@@ -40,7 +59,6 @@ public class SDItest extends LinearOpMode {
         slide = hardwareMap.get(DcMotorEx.class, "slide");
 
         pivot0 = hardwareMap.get(DcMotorEx.class, "pivot0");
-        pivot2 = hardwareMap.get(DcMotorEx.class, "pivot2");
 
         clawServo = hardwareMap.servo.get("clawServo");
         wristServo = hardwareMap.servo.get("wristServo");
@@ -48,8 +66,7 @@ public class SDItest extends LinearOpMode {
         clawServo.setPosition(0);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
-        pivot0.setPower(.5);
-        pivot2.setPower(.55);
+//        pivot0.setPower(.5);
         while(((DcMotorEx) slide).getCurrent(CurrentUnit.AMPS) < 3.25) {
             slide.setPower(.5);
             telem();
@@ -57,22 +74,42 @@ public class SDItest extends LinearOpMode {
 
         slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pivot0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        pivot2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         slide.setTargetPosition(-5);
-        pivot0.setTargetPosition(400);
-        pivot2.setTargetPosition(-400);
         clawServo.setPosition(.35);
 
         slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telem();
+
+        controller = new PIDController(p, i, d);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+
+
+        pivot0.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
 
         while (opModeIsActive()) {
+            double dt = timer.seconds(); // time since last loop
+            timer.reset();
+//            target = ((int)(450 + gamepad2.left_stick_x * -250));
+            controller.setPID(p, i, d);
+             target += gamepad2.left_stick_x * 300 * dt;
+
+            telemetry.addData("myVariable", myVariable);
+            int armPos = pivot0.getCurrentPosition();
+            double pid = controller.calculate(armPos, (int)target);
+            double ff = Math.cos(Math.toRadians(target / ticks_in_degree)) * f;
+
+            double power = pid + ff;
+
+            pivot0.setPower(power);
+
+            telemetry.addData("pos ", armPos);
+            telemetry.addData("target ", target);
+
 
             previousGamepad2.copy(currentGamepad2);
             currentGamepad2.copy(gamepad2);
@@ -118,12 +155,13 @@ public class SDItest extends LinearOpMode {
         }
         else if(state == RobotState.DROPSAMPLE){
             slide.setTargetPosition((int)(slideOut ? -240 : -5));
+
             if(gamepad2.dpad_down){
                 state = RobotState.GRABSAMPLE;
             }
         }
 
-        wristServo.setPosition( gamepad2.right_stick_x *.375 + .62);
+        wristServo.setPosition( gamepad2.left_trigger *.375 + gamepad2.right_trigger * -.375 + .62);
         if(currentGamepad.right_bumper && !previousGamepad.right_bumper){
                     clawOpen = !clawOpen;
                 }
@@ -131,7 +169,7 @@ public class SDItest extends LinearOpMode {
             slideOut = !slideOut;
         }
         clawServo.setPosition(clawOpen ? .35 : .65);
-        pivot0.setTargetPosition((int)(600 + gamepad2.left_stick_x * -250));
+
     }
 
     public void telem() {
@@ -141,11 +179,10 @@ public class SDItest extends LinearOpMode {
 
         telemetry.addData("Claw ",clawServo.getPosition());
         telemetry.addData("piv0 target",pivot0.getTargetPosition());
-        telemetry.addData("piv2 target",pivot2.getTargetPosition());
 
+        telemetry.addData("target",target);
         telemetry.addData("piv0 cur",pivot0.getCurrentPosition());
-
-        telemetry.addData("piv2 cur",pivot2.getCurrentPosition());
+        telemetry.addData("target",target);
 
         telemetry.addData("slide target",slide.getTargetPosition());
 
