@@ -27,7 +27,8 @@ public class newCofe extends LinearOpMode {
          int armRaisedTarget = 1040;
          Gamepad currentGamepad2 = new Gamepad();
          Gamepad previousGamepad2 = new Gamepad();
-
+        
+         
         double[] initValues = {0,-7,0.49};
         DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
         Servo clawServo, wristServo, spinServo, armServo;
