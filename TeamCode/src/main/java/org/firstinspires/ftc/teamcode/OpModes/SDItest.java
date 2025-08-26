@@ -17,7 +17,9 @@ public class SDItest extends LinearOpMode {
     Servo linkServo, headServo, frontClawServo, backClawServo, armServo,workServo;
     public Gamepad currentGamepad2 = new Gamepad();
     public Gamepad previousGamepad2 = new Gamepad();
-    public boolean headUp = true;
+    public boolean headUp = false;
+    public boolean slideUp = true;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -55,8 +57,8 @@ public class SDItest extends LinearOpMode {
         fl.setDirection(DcMotor.Direction.REVERSE);
         bl.setDirection(DcMotor.Direction.REVERSE);
 
-        sr.setPower(.8);
-        sl.setPower(.8);
+        sr.setPower(.95);
+        sl.setPower(.95);
 
         linkServo.setPosition(0.98);
 
@@ -65,7 +67,7 @@ public class SDItest extends LinearOpMode {
         while (opModeIsActive()) {
 
             previousGamepad2.copy(currentGamepad2);
-            currentGamepad2.copy(gamepad2);
+            currentGamepad2.copy(gamepad1);
 
             p1Controls();
             p2Controls(currentGamepad2, previousGamepad2);
@@ -96,15 +98,18 @@ public class SDItest extends LinearOpMode {
     }
 
     public void p2Controls(Gamepad currentGamepad2, Gamepad previousGamepad2) {
-        armServo.setPosition(.45);
-        workServo.setPosition(gamepad2.left_stick_x/2 + .5);
-        headServo.setPosition(headUp ? 0 : .2);
-        linkServo.setPosition(gamepad2.right_trigger * -.3 + .63);
 
-        if(currentGamepad2.circle && !previousGamepad2.circle){
+        linkServo.setPosition(gamepad2.right_trigger * -.3 + .63);
+        workServo.setPosition(headUp ? .6 : .29 );
+
+
+        if(currentGamepad2.left_bumper && !previousGamepad2.left_bumper){
             headUp = !headUp;
         }
-        if(currentGamepad2.x){
+        if(currentGamepad2.right_bumper && !previousGamepad2.right_bumper){
+            slideUp = !slideUp;
+        }
+        if(slideUp){
             sl.setTargetPosition(2100);
             sr.setTargetPosition(2100);
         }
@@ -120,7 +125,7 @@ public class SDItest extends LinearOpMode {
         telemetry.addData("back claw", linkServo.getPosition());
         telemetry.addData("head claw", headServo.getPosition());
 
-        telemetry.addData("work claw", workServoa1.getPosition());
+        telemetry.addData("work claw", workServo.getPosition());
 
         telemetry.addData("SR pos", sr.getCurrentPosition());
         telemetry.addData("Sl pos", sl.getCurrentPosition());
