@@ -29,7 +29,7 @@ public class pringlesbblyan999hotdog extends LinearOpMode {
          Gamepad previousGamepad2 = new Gamepad();
 
         double[] initValues = {0,-7,0.49};
-        DcMotor frMotor, blMotor, flMotor, brMotor, erm, elm, arm;
+        DcMotor frMotor, blMotor, flMotor, brMotor,  erm, elm, arm;
         Servo clawServo, wristServo, spinServo, armServo;
 
         MecanumDrive drive = new MecanumDrive(hardwareMap,new Pose2d(-32.5175 , -65.071, Math.toRadians(180)));
